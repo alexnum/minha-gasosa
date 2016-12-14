@@ -1,27 +1,20 @@
-var express = require('express');
-var mongoose = require('mongoose');
-var models = require('./models');
+var app = require('./models/app_config');
 var users = require('./models/User');
-var gasStation = require('./routes/gas');
-
-var port = process.env.PORT || 5000;
-var db = process.env.DB || 'mongodb://heroku_mhcrtkhx:lihoc3618usahfd81au68rqtjn@ds119728.mlab.com:19728/heroku_mhcrtkhx' || 'mongodb://localhost:27017/minhagasosa';
-
-//mongoose.connect(db, function(err) {
- // if (err) throw err;
-//});
-
-var UserModel = mongoose.model('User');
-var RouteModel = mongoose.model('Route');
-var CommentModel = mongoose.model('Comment');
-var GasModel = mongoose.model('GasStation');
+//var dataBase = require('./models/db_config');
+//var gasStation = require('./routes/gas');
+var express = require('express');
 
 
-var app = express();
+//var RouteModel = mongoose.model('Route');
+//var CommentModel = mongoose.model('Comment');
+//var GasModel = mongoose.model('GasStation');
+
+
+
 
 app.use(express.static(__dirname + '/public'));
 
-app.use('/gas', gasStation);
+//app.use('/gas', gasStation);
 
 // views is directory for all template files
 app.set('views', __dirname + '/views');
@@ -32,11 +25,18 @@ app.get('/', function(request, response) {
 });
 
 app.get('/users', function(req, res) {
-  UserModel.list(function(resp) {
+  users.list(function(resp) {
     res.json(resp);
   });
 });
 
+app.post('/signUpUser', function(req, res, next){
+  users.save(req.body.firstName, req.body.lastName, req.body.login, req.body.email, req.body.gender, req.body.address, req.body.city, req.body.state, req.body.country, req.body.phoneNumber, req.body.lastLogin, req.body.birthDate, req.body.routes, function(resp){
+      res.json(resp);
+  });
+});
+
+/*
 app.listen(port, function() {
   console.log('Node app is running on port', port);
 
@@ -85,14 +85,4 @@ app.listen(port, function() {
       });
     });
   });
-
-  app.get('/users', function(req, res) {
-    users.list(function(resp) {
-      res.json(resp);
-    });
-  });
-
-
-});
-
-
+  */

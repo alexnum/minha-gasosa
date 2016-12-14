@@ -1,4 +1,10 @@
-var mongoose = require('mongoose'), Schema = mongoose.Schema;
+var db_string = 'mongodb://localhost:27017/minhagasosa';
+
+if (process.env.PORT) {
+	db_string = 'mongodb://heroku_mhcrtkhx:lihoc3618usahfd81au68rqtjn@ds119728.mlab.com:19728/heroku_mhcrtkhx';
+}
+var mongoose = require('mongoose').connect(db_string);
+var Schema = mongoose.Schema;
 
 var db = mongoose.connection;
 
@@ -17,7 +23,7 @@ db.once('open', function() {
 	  endPoint: { lat: Number, lng: Number }
 	});
 
-	exports.route = module.exports = mongoose.model('Route', routeSchema);
+	exports.Route = mongoose.model('Route', routeSchema);
 
 
 	var userSchema = mongoose.Schema({
@@ -37,16 +43,16 @@ db.once('open', function() {
 	  created_at: Date
 	});
 
-	exports.user = module.exports = mongoose.model('User', userSchema);
+	exports.User = mongoose.model('User', userSchema);
 
-	var comment = mongoose.Schema({
+	var commentSchema = mongoose.Schema({
 	  text: String,
 	  author: { type: Schema.Types.ObjectId, ref: 'User' },
 	  creationDate: Date,
 	  thumbsUp: Number
 	});
 
-	exports.comment = module.exports = mongoose.model('Comment', comment);
+	exports.Comment = mongoose.model('Comment', commentSchema);
 
 	var gasSchema = mongoose.Schema({
 	  name: String,
@@ -58,6 +64,6 @@ db.once('open', function() {
 	  location: { lat: Number, lng: Number },
 	});
 
-	exports.gasStation = module.exports = mongoose.model('GasStation', gasSchema);
+	exports.GasStation = mongoose.model('GasStation', gasSchema);
 
 });
