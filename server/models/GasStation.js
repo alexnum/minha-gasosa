@@ -4,25 +4,64 @@
 /**
  * Created by Alessandro on 04/12/2016.
  */
-var mongoose = require('mongoose'), Schema = mongoose.Schema;
+var db = require('./db_config.js');
 
-var Comment = mongoose.Schema({
-  text: String,
-  author: { type: Schema.Types.ObjectId, ref: 'User' },
-  creationDate: Date,
-  thumbsUp: Number
-});
+exports.saveComment = function(text, author, thumbsUp, callback){
+  new db.Comment({
+    'text': text,
+    'author': author,
+    'thumbsUp': thumbsUp,
+    'created_at': new Date()
+  }).save(function(error, comment) {
+    if(error) {
 
-var Comment = module.exports = mongoose.model('Comment', Comment);
+      callback('Could not register your comment!');
+    } else {
 
-var gasSchema = mongoose.Schema({
-  name: String,
-  city: String,
-  state: String,
-  comments: [{ type: Schema.Types.ObjectId, ref: 'Comment' }],
-  rating: Number,
-  description: String,
-  location: { lat: Number, lng: Number },
-});
+      callback(comment);
+    }
+  });
+};
 
-var GasStation = module.exports = mongoose.model('GasStation', gasSchema);
+
+exports.saveGas = function(name, city, state, comments, rating, description, location, callback){
+  new db.GasStation({
+    'name': name,
+    'city': city,
+    'state': state,
+    'comments' : comments,
+    'rating:' : rating,
+    'description' : description,
+    'location:' : location,
+    'created_at': new Date()
+  }).save(function(error, gas) {
+    if(error) {
+
+      callback('Could not register your gas station!');
+    } else {
+
+      callback(gas);
+    }
+  });
+};
+
+
+exports.listGasStation = function(callback){
+  db.GasStation.find({}, function(error, gas) {
+    if(error) {
+      callback('Could not recover the gas stations!');
+    } else {
+      callback(gas);
+    }
+  });
+};
+
+exports.listComment = function(callback){
+  db.Comment.find({}, function(error, comment) {
+    if(error) {
+      callback('Could not recover the comments!');
+    } else {
+      callback(comment);
+    }
+  });
+};

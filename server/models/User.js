@@ -22,7 +22,7 @@ exports.save = function(firstName, lastName, login, email, gender, address, city
   }).save(function(error, user) {
     if(error) {
 
-      callback('Não foi possível salvar o usuário');
+      callback('Unable to save this user!');
     } else {
 
       callback(user);
@@ -31,12 +31,79 @@ exports.save = function(firstName, lastName, login, email, gender, address, city
 };
 
 exports.list = function(callback){
-  //db.User.collection.drop();
   db.User.find({}, function(error, users) {
     if(error) {
-      callback('Não foi possível retornar os usuários!');
+      callback('Could not recover the users!');
     } else {
       callback(users);
+    }
+  });
+};
+
+
+
+exports.update = function(id, firstName, lastName, login, email, gender, address, city, state, country, phoneNumber, lastLogin, birthDate, routes, callback) {
+  db.User.findById(id, function(error, user) {
+    if(firstName) {
+      user.firstName = firstName;
+    }
+    if(lastName) {
+      user.lastName = lastName;
+    }
+    if(login) {
+      user.login = login;
+    }
+    if(email) {
+      user.email = email;
+    }
+    if(gender) {
+      user.gender = gender;
+    }
+    if(address) {
+      user.address = address;
+    }
+    if(city) {
+      user.city = city;
+    }
+    if(state) {
+      user.state = state;
+    }
+    if(country) {
+      user.country = country;
+    }
+    if(phoneNumber) {
+      user.phoneNumber = phoneNumber;
+    }
+    if(lastLogin) {
+      user.lastLogin = lastLogin;
+    }
+    if(birthDate) {
+      user.birthDate = birthDate;
+    }
+    if(routes) {
+      user.routes = routes;
+    }
+    user.save(function(error, user) {
+      if(error) {
+        callback('Could not update the user!');
+      } else {
+        callback(user);
+      }
+    });
+  });
+};
+
+
+exports.delete = function(id, callback) {
+  db.User.findById(id, function(error, user) {
+    if(error) {
+      callback('Could not recover the user!');
+    } else {
+      user.remove(function(error) {
+        if(!error) {
+          callback('Deleted user successfully');
+        }
+      });
     }
   });
 };

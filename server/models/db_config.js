@@ -8,7 +8,7 @@ var Schema = mongoose.Schema;
 
 var db = mongoose.connection;
 
-db.on('error', console.error.bind(console, 'Erro ao conectar no banco'));
+db.on('error', console.error.bind(console, 'Error connecting to database'));
 
 db.once('open', function() {
 
@@ -48,8 +48,8 @@ db.once('open', function() {
 	var commentSchema = mongoose.Schema({
 	  text: String,
 	  author: { type: Schema.Types.ObjectId, ref: 'User' },
-	  creationDate: Date,
-	  thumbsUp: Number
+	  thumbsUp: Number,
+	  created_at: Date
 	});
 
 	exports.Comment = mongoose.model('Comment', commentSchema);
@@ -61,7 +61,7 @@ db.once('open', function() {
 	  comments: [{ type: Schema.Types.ObjectId, ref: 'Comment' }],
 	  rating: Number,
 	  description: String,
-	  location: { lat: Number, lng: Number },
+	  location: { lat: Number, lng: Number }
 	});
 
 	exports.GasStation = mongoose.model('GasStation', gasSchema);

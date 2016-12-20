@@ -1,5 +1,7 @@
 var app = require('./models/app_config');
 var users = require('./models/User');
+var gasStations = require('./models/GasStation');
+var routes = require('./models/Route');
 //var dataBase = require('./models/db_config');
 //var gasStation = require('./routes/gas');
 var express = require('express');
@@ -35,6 +37,59 @@ app.post('/signUpUser', function(req, res, next){
       res.json(resp);
   });
 });
+
+
+app.post('/signUpGasStation', function(req, res, next){
+  gasStations.saveGas(req.body.name, req.body.city, req.body.state, req.body.comments, req.body.rating, req.body.description, req.body.location, function(resp){
+      res.json(resp);
+  });
+});
+
+app.get('/gasStations', function(req, res) {
+  gasStations.listGasStation(function(resp) {
+    res.json(resp);
+  });
+});
+
+
+app.post('/recordComment', function(req, res, next){
+  gasStations.saveComment(req.body.text, req.body.author, req.body.thumbsUp, function(resp){
+      res.json(resp);
+  });
+});
+
+app.get('/comments', function(req, res) {
+  gasStations.listComment(function(resp) {
+    res.json(resp);
+  });
+});
+
+app.post('/registerRoute', function(req, res, next){
+  routes.save(req.body.name, req.body.roundTrip, req.body.extra, req.body.goingDistance, req.body.backDistance, req.body.extraPoints, req.body.startPoint, req.body.endPoint, function(resp){
+      res.json(resp);
+  });
+});
+
+app.get('/routes', function(req, res) {
+  routes.list(function(resp) {
+    res.json(resp);
+  });
+});
+
+
+app.put('/users', function(req, res) {
+ users.update(req.body.id, req.body.firstName, req.body.lastName, req.body.login, req.body.email, req.body.gender, req.body.address, req.body.city, req.body.state, req.body.country, req.body.phoneNumber, req.body.lastLogin, req.body.birthDate, req.body.routes, function(resp) {
+    res.json(resp);
+  });
+});
+
+app.delete('/users/:id', function(req, res) {
+  users.delete(req.param('id'), function(resp) {
+    res.json(resp);
+  });
+
+});
+
 
 /*
 app.listen(port, function() {
