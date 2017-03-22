@@ -3,10 +3,9 @@ package com.minhagasosa.dao;
 import io.requery.*;
 
 @Entity
-abstract class AbstractCarro {
+abstract class AbstractMarca {
 
     @Key @Generated
     Long id;
-    Marca marca;
     String nome;
 }

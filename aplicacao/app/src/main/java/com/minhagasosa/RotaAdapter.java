@@ -43,13 +43,13 @@ public class RotaAdapter extends ArrayAdapter<Rota> {
         tvTituloRota.setText(r.getNome());
         DecimalFormat df = new DecimalFormat("##.##");
         df.setRoundingMode(RoundingMode.DOWN);
-        if(r.getIdaEVolta()){
+        if(r.isIdaEVolta()){
             tvDistTotal.setText(df.format((r.getDistanciaIda() + r.getDistanciaVolta())) + " KM");
         }else{
             tvDistTotal.setText(df.format((r.getDistanciaIda())) + " KM");
         }
 
-        if(r.getDeRotina()) {
+        if(r.isRotineira()) {
             imvExtra.setVisibility(View.GONE);
         }
         return v;

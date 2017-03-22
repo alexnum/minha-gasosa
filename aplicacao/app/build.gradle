@@ -28,6 +28,9 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    lintOptions {
+        disable 'InvalidPackage'
+    }
 }
 
 dependencies {
@@ -47,6 +50,9 @@ dependencies {
         exclude group: 'com.android.support'
     }
 
+    compile 'io.requery:requery:1.2.1'
+    compile 'io.requery:requery-android:1.2.1'
+    annotationProcessor 'io.requery:requery-processor:1.2.1'
     compile 'de.greenrobot:greendao:2.1.0'
     compile 'com.birbit:android-priority-jobqueue:1.3.5'
     compile 'com.android.support:appcompat-v7:25.2.0'

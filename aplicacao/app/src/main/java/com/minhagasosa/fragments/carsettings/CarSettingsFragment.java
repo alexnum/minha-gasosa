@@ -1,11 +1,10 @@
 package com.minhagasosa.fragments.carsettings;
 
 import android.app.ProgressDialog;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -18,11 +17,9 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import com.minhagasosa.R;
 import com.minhagasosa.dao.Carro;
-import com.minhagasosa.dao.CarroDao;
-import com.minhagasosa.dao.DaoMaster;
-import com.minhagasosa.dao.DaoSession;
+import com.minhagasosa.dao.Datastore;
+import com.minhagasosa.dao.Marca;
 import com.minhagasosa.dao.Modelo;
-import com.minhagasosa.dao.ModeloDao;
 import com.minhagasosa.fragments.Home.HomeFragment;
 import com.minhagasosa.preferences.MinhaGasosaPreference;
 import com.path.android.jobqueue.Job;
@@ -38,11 +35,11 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import de.greenrobot.dao.query.Query;
 
-public class CarSettingsFragment extends Fragment {
-
+public class CarSettingsFragment extends Fragment implements AdapterView.OnItemSelectedListener {
 
     /**
      * atributo de MARCA do carro
@@ -51,11 +48,11 @@ public class CarSettingsFragment extends Fragment {
     /**
      * Atributo de modelo do carro
      */
-    private Spinner spinnerModelo;
+    private Spinner spinnerCarro;
     /**
      * atributo da versao do carro
      */
-    private Spinner spinnerVersao;
+    private Spinner spinnerModelo;
     /**
      * atributo da potencia do carro
      */
@@ -64,19 +61,7 @@ public class CarSettingsFragment extends Fragment {
      * atributo progresso
      */
     private ProgressDialog progress;
-    /**
-     * verifica
-     */
-    private int check = 0;
-    /**
-     *
-     */
-    public static CarSettingsFragment self;
-    /**
-     * instancia da classe CarroDao
-     */
-    private CarroDao cDao;
-
+    private Datastore datastore;
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -85,73 +70,22 @@ public class CarSettingsFragment extends Fragment {
 
         setHasOptionsMenu(true);
 
-        DaoMaster.DevOpenHelper helper = new DaoMaster.DevOpenHelper(getContext(), "casosa-db", null);
-        self = this;
+        datastore = new Datastore(getContext());
         JobManager jobManager = new JobManager(getContext());
-        SQLiteDatabase db = helper.getWritableDatabase();
-        DaoMaster daoMaster = new DaoMaster(db);
-        final DaoSession session = daoMaster.newSession();
-        final ModeloDao mDao = session.getModeloDao();
-        cDao = session.getCarroDao();
 
-        //ADIÇÃO DE ALGUMAS ROTAS FICTICIAS
-        //rDao.insert(new Rota((long)1, "Olar", true, (float)10.5, (float)5.5, false, 0));
-        //rDao.insert(new Rota((long)2, "Olar2", true, (float)5.5, (float)5.5, true, 1));
-        //rDao.insert(new Rota((long)3, "Olar3", false, (float)8.5, (float)0, true, 1));
-        //rDao.insert(new Rota((long)4, "Olar4", false, (float)10.0, (float)0, true, 5));
-
-        // todo é para deixar? start
-//        if (MinhaGasosaPreference.getDone(getContext())) {
-//            Fragment fragment = new HomeFragment();
-//            FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
-//            ft.replace(R.id.content_frame, fragment);
-//            ft.commit();
-//            return view;
-//        }
-        // todo é para deixar? end
         spinnerMarca = (Spinner) view.findViewById(R.id.spinnerMarca);
-        spinnerModelo = (Spinner) view.findViewById(R.id.spinnerModelo);
-        spinnerVersao = (Spinner) view.findViewById(R.id.spinnerVersao);
+        spinnerCarro = (Spinner) view.findViewById(R.id.spinnerModelo);
+        spinnerModelo = (Spinner) view.findViewById(R.id.spinnerVersao);
         spinnerPotencia = (Spinner) view.findViewById(R.id.spinnerPot);
 
-        String[] marcas = {"Aston Martin", "Audi", "Bentley", "BMW", "Chery", "Chevrolet", "Citroen", "Dodge", "Ferrari", "Fiat",
-                "Ford", "Geely", "Honda", "Hyundai", "JAC", "Jaguar", "Jeep", "Kia", "Lamborghini", "Land Rover", "Lexus", "Lifan",
-                "Maserati", "Mercedes-Benz", "Mini", "Mitsubishi", "Nissan", "Peugeot", "Porsche", "Rely", "Renault", "Shineray",
-                "Smart", "Ssangyong", "Subaru", "Suzuki", "Toyota", "Troller", "Volkswagen", "Volvo"};
-        spinnerMarca.setAdapter(new ArrayAdapter<String>(getContext(),
-                android.R.layout.simple_spinner_item, marcas));
+        spinnerMarca.setOnItemSelectedListener(this);
+        spinnerCarro.setOnItemSelectedListener(this);
+        spinnerPotencia.setOnItemSelectedListener(this);
 
-        String selectedMarca = MinhaGasosaPreference.getMarca(getContext());
-        if (selectedMarca != null) {
-            spinnerMarca.setSelection(Arrays.asList(marcas).indexOf(selectedMarca), true);
-            popularModelos(session);
-        }
 
-        spinnerMarca.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(final AdapterView<?> parent, final View view, final int position, final long id) {
-                popularModelos(session);
-            }
-
-            @Override
-            public void onNothingSelected(final AdapterView<?> parent) {
-
-            }
-        });
-        spinnerModelo.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(final AdapterView<?> parent, final View view, final int position, final long id) {
-                popularVersoes(cDao);
-            }
-
-            @Override
-            public void onNothingSelected(final AdapterView<?> parent) {
-
-            }
-        });
-
-        if (mDao.count() == 0) {
+        if (datastore.get().count(Modelo.class).get().value() == 0) {
             getActivity().setFinishOnTouchOutside(false);
+
             progress = new ProgressDialog(getContext());
             progress.setCancelable(false);
             progress.setCanceledOnTouchOutside(false);
@@ -169,8 +103,16 @@ public class CarSettingsFragment extends Fragment {
 
                 @Override
                 public void onRun() throws Exception {
-                    CarroDao cDao = session.getCarroDao();
-                    populateCars(mDao, cDao);
+                    popularDb();
+                    progress.hide();
+
+                    Fragment fragment = new CarSettingsFragment();
+                    FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+                    Bundle argsCar = new Bundle();
+                    argsCar.putBoolean("fromHome", true);
+                    fragment.setArguments(argsCar);
+                    ft.replace(R.id.content_frame, fragment);
+                    ft.commit();
                 }
 
                 @Override
@@ -178,92 +120,62 @@ public class CarSettingsFragment extends Fragment {
 
                 }
             });
-
-
-        }
-        spinnerPotencia.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(final AdapterView<?> parent, final View view, final int position, final long id) {
-                String selectedPot = (String) spinnerPotencia.getSelectedItem();
-                if (selectedPot.isEmpty()) {
-                    MinhaGasosaPreference.putWithPotency(false, getContext());
-                    MinhaGasosaPreference.putPotency(0.0f, getContext());
-                } else {
-                    MinhaGasosaPreference.putWithPotency(true, getContext());
-                    MinhaGasosaPreference.putPotency(Float.valueOf(selectedPot), getContext());
-                    MinhaGasosaPreference.setConsumoUrbanoPrimario(10.0f, getContext());
-                    MinhaGasosaPreference.setConsumoRodoviarioPrimario(10.5f, getContext());
-                    MinhaGasosaPreference.setConsumoUrbanoSecundario(11.0f, getContext());
-                    MinhaGasosaPreference.setConsumoUrbanoSecundario(11.5f, getContext());
-                }
-            }
-
-            @Override
-            public void onNothingSelected(final AdapterView<?> parent) {
-            }
-        });
-        String[] potencias = {"", "1.0", "1.4", "1.6", "1.8", "2.0", "2.2", "3.0"};
-        spinnerPotencia.setAdapter(new ArrayAdapter<>(getActivity(),
-                android.R.layout.simple_spinner_item, potencias));
-
-        String selectedPotencia = MinhaGasosaPreference.getVersao(getContext());
-        if (selectedPotencia != null) {
-            spinnerMarca.setSelection(Arrays.asList(potencias).indexOf(selectedPotencia), true);
         }
 
+        popularMarcas();
+        popularPotencias();
 
         return view;
+    }
+
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        if (parent == spinnerMarca) {
+            popularCarros();
+        } else if (parent == spinnerCarro) {
+            popularModelos();
+        } else if (parent == spinnerModelo) {
+            // TODO
+        } else if (parent == spinnerPotencia) {
+            String selectedPot = (String) spinnerPotencia.getSelectedItem();
+            if (selectedPot.isEmpty()) {
+                MinhaGasosaPreference.putWithPotency(false, getContext());
+                MinhaGasosaPreference.putPotency(0.0f, getContext());
+            } else {
+                MinhaGasosaPreference.putWithPotency(true, getContext());
+                MinhaGasosaPreference.putPotency(Float.valueOf(selectedPot), getContext());
+                MinhaGasosaPreference.setConsumoUrbanoPrimario(10.0f, getContext());
+                MinhaGasosaPreference.setConsumoRodoviarioPrimario(10.5f, getContext());
+                MinhaGasosaPreference.setConsumoUrbanoSecundario(11.0f, getContext());
+                MinhaGasosaPreference.setConsumoUrbanoSecundario(11.5f, getContext());
+            }
+        }
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+
     }
 
     /**
      * metodo que salva todas as informacoes do carro no banco
      *
-     * @param cDao
      */
-    private void salvarInformacoesCarro(final CarroDao cDao, View view) {
+    private void salvarInformacoesCarro() {
         if (!MinhaGasosaPreference.getWithPotency(getContext())) {
-            String marca = (String) spinnerMarca.getSelectedItem();
-            Modelo modelo = (Modelo) spinnerModelo.getSelectedItem();
-            long modeloId = modelo.getId();
-            String versao = (String) spinnerVersao.getSelectedItem();
-            Query query = cDao.queryBuilder().where(CarroDao.Properties.MODELO_ID.eq(modeloId),
-                    CarroDao.Properties.MARCA.eq(marca),
-                    CarroDao.Properties.VERSION.eq(versao)).build();
-            Carro carro = (Carro) query.list().get(0);
+            Modelo modelo = (Modelo) spinnerCarro.getSelectedItem();
+            String versao = (String) spinnerModelo.getSelectedItem();
 
-            if (carro.getMarca() != null) {
-                MinhaGasosaPreference.setMarca(carro.getMarca(), getContext());
-            }
-
-            if (carro.getModelo().getMODELO() != null) {
-                MinhaGasosaPreference.setModelo(carro.getModelo().getMODELO(), getContext());
-            }
-
-            if (carro.getVersion() != null) {
-                MinhaGasosaPreference.setVersao(carro.getVersion(), getContext());
-            }
-
-            if (carro.getIsFlex() != null) {
-                MinhaGasosaPreference.setCarroIsFlex(carro.getIsFlex(), getContext());
-            }
-            if (carro.getConsumoUrbanoGasolina() != null) {
-                MinhaGasosaPreference.setConsumoUrbanoPrimario(carro.getConsumoUrbanoGasolina(),
-                        getContext());
-            }
-            if (carro.getConsumoRodoviarioGasolina() != null) {
-                MinhaGasosaPreference.setConsumoRodoviarioPrimario(carro.getConsumoRodoviarioGasolina(),
-                        getContext());
-            }
-            if (carro.getConsumoUrbanoAlcool() != null) {
-                MinhaGasosaPreference.setConsumoUrbanoSecundario(carro.getConsumoUrbanoAlcool(),
-                        getContext());
-            }
-            if (carro.getConsumoRodoviarioAlcool() != null) {
-                MinhaGasosaPreference.setConsumoRodoviarioSecundario(carro.getConsumoRodoviarioAlcool(),
-                        getContext());
-            }
+            MinhaGasosaPreference.setMarca(modelo.getCarro().getMarca().getId(), getContext());
+            MinhaGasosaPreference.setModelo(modelo.getId(), getContext());
+            MinhaGasosaPreference.setCarro(modelo.getCarro().getId(), getContext());
+            MinhaGasosaPreference.setCarroIsFlex(modelo.isFlex(), getContext());
+            MinhaGasosaPreference.setConsumoUrbanoPrimario(modelo.getConsumoUrbanoGasolina().floatValue(), getContext());
+            MinhaGasosaPreference.setConsumoRodoviarioPrimario(modelo.getConsumoRodoviarioGasolina().floatValue(), getContext());
+            MinhaGasosaPreference.setConsumoUrbanoSecundario(modelo.getConsumoUrbanoAlcool().floatValue(), getContext());
+            MinhaGasosaPreference.setConsumoRodoviarioSecundario(modelo.getConsumoRodoviarioAlcool().floatValue(), getContext());
         }
-        EditText edCapacidadeTanuqe = (EditText) view.findViewById(R.id.ed_capacidade_tanque);
+        EditText edCapacidadeTanuqe = (EditText) getView().findViewById(R.id.ed_capacidade_tanque);
         String capacidade = edCapacidadeTanuqe.getText().toString();
         if (!capacidade.trim().isEmpty()) {
             try {
@@ -280,101 +192,138 @@ public class CarSettingsFragment extends Fragment {
         ft.commit();
     }
 
+    private void popularMarcas() {
+        List<Marca> marcas = datastore.get()
+                .select(Marca.class)
+                .orderBy(Marca.NOME.desc())
+                .get().toList();
+
+        spinnerMarca.setAdapter(new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, marcas));
+
+        Marca selectedMarca = MinhaGasosaPreference.getMarca(getContext());
+
+        if (marcas.contains(selectedMarca)) {
+            spinnerMarca.setSelection(marcas.indexOf(selectedMarca), true);
+            popularCarros();
+        }
+    }
+
     /**
      * metodo que popula as versoes do carro para o banco de dados
      *
-     * @param cDao
      */
-    private void popularVersoes(final CarroDao cDao) {
-        Modelo selectedModel = (Modelo) spinnerModelo.getSelectedItem();
-        long idx = selectedModel.getId();
-        ArrayList<Carro> listaCarros = (ArrayList<Carro>) cDao.queryBuilder().where(CarroDao.Properties.MODELO_ID.eq(idx)).list();
-        String[] listaVersoes = new String[listaCarros.size()];
-        for (int i = 0; i < listaCarros.size(); i++) {
-            listaVersoes[i] = listaCarros.get(i).toString();
+    private void popularModelos() {
+        Carro carro = (Carro) spinnerCarro.getSelectedItem();
+
+        List<Modelo> modelos = new Datastore(getContext()).get()
+                .select(Modelo.class)
+                .where(Modelo.CARRO.eq(carro))
+                .get().toList();
+
+        spinnerModelo.setAdapter(new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, modelos));
+
+        Modelo selectedModelo = MinhaGasosaPreference.getModelo(getContext());
+        if (modelos.contains(selectedModelo)) {
+            spinnerMarca.setSelection(modelos.indexOf(selectedModelo), true);
         }
-        spinnerVersao.setAdapter(new ArrayAdapter<String>(getContext(),
-                android.R.layout.simple_spinner_item, listaVersoes));
-
-        String selectedVersion = MinhaGasosaPreference.getVersao(getContext());
-        if (selectedVersion != null) {
-            spinnerMarca.setSelection(Arrays.asList(listaVersoes).indexOf(selectedVersion), true);
-        }
-
-
     }
 
     /**
      * Metodo que retorna a soma das rotas cadastradas no sistema
      *
-     * @param session
      * @return
      */
 
-    private void popularModelos(final DaoSession session) {
-        String marca = (String) spinnerMarca.getSelectedItem();
-        String select = "SELECT MODELO._id, MODELO.MODELO FROM CARRO, MODELO " +
-                "WHERE CARRO.MARCA ='" + marca + "' AND MODELO._id = CARRO.MODELO_ID " +
-                "GROUP BY MODELO.MODELO ORDER BY MODELO.MODELO ASC";
-        ArrayList<Modelo> listaModelos = (ArrayList<Modelo>) listModelos(session, select);
-        spinnerModelo.setAdapter(new ArrayAdapter<Modelo>(getContext(),
-                android.R.layout.simple_spinner_item, listaModelos));
+    private void popularCarros() {
+        Marca marca = (Marca) spinnerMarca.getSelectedItem();
 
-        String selectedModelo = MinhaGasosaPreference.getModelo(getContext());
+        List<Carro> carros = new Datastore(getContext()).get()
+                .select(Carro.class)
+                .where(Carro.MARCA.eq(marca))
+                .get().toList();
 
-        if (selectedModelo != null) {
-            spinnerMarca.setSelection(listaModelos.indexOf(selectedModelo), true);
-            popularVersoes(cDao);
+        spinnerCarro.setAdapter(new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, carros));
+
+        Carro selectedCarro = MinhaGasosaPreference.getCarro(getContext());
+
+        if (carros.contains(selectedCarro)) {
+            spinnerCarro.setSelection(carros.indexOf(selectedCarro), true);
+            popularModelos();
         }
     }
 
-    /**
-     * metodo que popula o modelo e o carro no banco
-     *
-     * @param mDao
-     * @param cDao
-     */
-    private void populateCars(final ModeloDao mDao, final CarroDao cDao) {
-        String jsonModelos = loadJSONFromAsset("Modelos.json");
-        String jsonCarros = loadJSONFromAsset("carrosminhagasosa.json");
-        try {
-            JSONArray modelos = new JSONArray(jsonModelos);
-            for (int i = 0; i < modelos.length(); i++) {
-                JSONObject modeloJson = modelos.getJSONObject(i);
-                Modelo modelo = new Modelo(modeloJson.getLong("ID"), modeloJson.getString("MODELO"));
-                mDao.insert(modelo);
-            }
-            JSONArray carros = new JSONArray(jsonCarros);
-            for (int i = 0; i < carros.length(); i++) {
-                JSONObject cj = carros.getJSONObject(i);
-                Carro c = new Carro();
-                c.setId(cj.getLong("id"));
-                c.setMarca(cj.getString("marca"));
-                c.setAno(cj.getString("ano"));
-                c.setConsumoUrbanoGasolina((float) cj.getDouble("urbano"));
-                c.setConsumoRodoviarioGasolina((float) cj.getDouble("rodoviario"));
-                c.setVersion(cj.getString("VERSION"));
-                c.setModeloId(cj.getLong("MODEL"));
-                if (cj.getInt("FLEX") == 1) {
-                    c.setIsFlex(true);
-                    c.setConsumoUrbanoAlcool((float) cj.getDouble("urbano_alcol"));
-                    c.setConsumoRodoviarioAlcool((float) cj.getDouble("rodoviario_alcool"));
-                } else {
-                    c.setIsFlex(false);
-                }
-                cDao.insert(c);
+    private void popularPotencias() {
+        String[] potencias = {"", "1.0", "1.4", "1.6", "1.8", "2.0", "2.2", "3.0"};
+        spinnerPotencia.setAdapter(new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, potencias));
 
+        /*
+        String selectedPotencia = MinhaGasosaPreference.getVersao(getContext());
+        if (selectedPotencia != null) {
+            spinnerMarca.setSelection(Arrays.asList(potencias).indexOf(selectedPotencia), true);
+        }
+        */
+
+        // TODO
+        // TODO
+        // TODO
+        // TODO
+        // TODO
+    }
+
+    private void popularDb() {
+        String jsonmarcas = loadJSONFromAsset("marcas.json");
+        String jsoncarros = loadJSONFromAsset("Modelos.json");
+        String jsonmodelos = loadJSONFromAsset("carrosminhagasosa.json");
+        try {
+            JSONArray marcas_novo = new JSONArray(jsonmarcas);
+            JSONArray carros_novo = new JSONArray(jsoncarros);
+            JSONArray modelos_novo = new JSONArray(jsonmodelos);
+
+            SparseArray<String> carros = new SparseArray<>();
+
+            for (int i = 0; i < marcas_novo.length(); i++) {
+                Marca m = new Marca();
+                m.setNome(marcas_novo.getString(i));
+                datastore.get().insert(m);
             }
-            progress.hide();
-//            Intent i = new Intent(self, MainActivity.class);
-//            self.startActivity(i);
-            Fragment fragment = new CarSettingsFragment();
-            FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
-            Bundle argsCar = new Bundle();
-            argsCar.putBoolean("fromHome", true);
-            fragment.setArguments(argsCar);
-            ft.replace(R.id.content_frame, fragment);
-            ft.commit();
+
+            for (int i = 0; i < carros_novo.length(); i++) {
+                carros.append(carros_novo.getJSONObject(i).getInt("ID"), carros_novo.getJSONObject(i).getString("MODELO"));
+            }
+
+            for (int i = 0; i < modelos_novo.length(); i++) {
+                JSONObject current = modelos_novo.getJSONObject(i);
+                String nome_carro = carros.get(current.getInt("MODEL"));
+                String nome_marca = current.getString("marca");
+                Carro carro;
+
+                try {
+                    carro = datastore.get()
+                            .select(Carro.class)
+                            .where(Carro.NOME.eq(nome_carro))
+                            .get().first();
+                } catch (NoSuchElementException e) {
+                    carro = new Carro();
+                    carro.setNome(nome_carro);
+                    Marca m = datastore.get()
+                            .select(Marca.class)
+                            .where(Marca.NOME.eq(nome_marca))
+                            .get().first();
+                    carro.setMarca(m);
+                    datastore.get().insert(carro);
+                }
+
+                Modelo m = new Modelo();
+                m.setNome(current.getString("VERSION"));
+                m.setAno(current.getString("ano"));
+                m.setCarro(carro);
+                m.setConsumoRodoviarioAlcool(current.getDouble("rodoviario_alcool"));
+                m.setConsumoUrbanoAlcool(current.getDouble("urbano_alcol"));
+                m.setConsumoRodoviarioGasolina(current.getDouble("rodoviario"));
+                m.setConsumoUrbanoGasolina(current.getDouble("urbano"));
+                m.setFlex(current.getInt("FLEX") == 1);
+                datastore.get().insert(m);
+            }
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -410,29 +359,6 @@ public class CarSettingsFragment extends Fragment {
     }
 
     /**
-     * @param session
-     * @param select
-     * @return
-     */
-    private static List<Modelo> listModelos(final DaoSession session, final String select) {
-        ArrayList<Modelo> result = new ArrayList<Modelo>();
-        Cursor c = session.getDatabase().rawQuery(select, null);
-        try {
-            if (c.moveToFirst()) {
-                do {
-                    Modelo m = new Modelo();
-                    m.setId(c.getLong(0));
-                    m.setMODELO(c.getString(1));
-                    result.add(m);
-                } while (c.moveToNext());
-            }
-        } finally {
-            c.close();
-        }
-        return result;
-    }
-
-    /**
      * metodo que retorna o valor maximo que deve ser gasto
      *
      * @return
@@ -452,11 +378,9 @@ public class CarSettingsFragment extends Fragment {
     public final boolean onOptionsItemSelected(final MenuItem item) {
         switch (item.getItemId()) {
             case R.id.done_route:
-                salvarInformacoesCarro(cDao, getView());
+                salvarInformacoesCarro();
                 return true;
         }
         return super.onOptionsItemSelected(item);
     }
-
-
 }

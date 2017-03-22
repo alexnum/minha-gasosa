@@ -1,7 +1,6 @@
 package com.minhagasosa;
 
 import android.content.Intent;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -16,10 +15,8 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 
 import com.minhagasosa.activites.maps.RouteMapsActivity;
-import com.minhagasosa.dao.DaoMaster;
-import com.minhagasosa.dao.DaoSession;
+import com.minhagasosa.dao.Datastore;
 import com.minhagasosa.dao.Rota;
-import com.minhagasosa.dao.RotaDao;
 
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
@@ -231,32 +228,27 @@ public class RoutesActivity extends AppCompatActivity {
      * @param deRotina
      */
     private void saveRoute(final String title, final float distanceGoing, final float distanceBack, final boolean goingBack,
-                           final boolean repeats, final int repetitions, final boolean deRotina) {
+                                         final boolean repeats, final int repetitions, final boolean deRotina) {
 
-        DaoMaster.DevOpenHelper helper = new DaoMaster.DevOpenHelper(this, "casosa-db", null);
-        SQLiteDatabase db = helper.getWritableDatabase();
-        DaoMaster daoMaster = new DaoMaster(db);
-        DaoSession session = daoMaster.newSession();
-        RotaDao rotaDao = session.getRotaDao();
         Rota novaRota = new Rota();
-        rotaDao.insert(novaRota);
 
-        novaRota.setId(rotaDao.getKey(novaRota));
-        Log.d("RoutesActivity", "id da rota inserida: " + novaRota.getId());
-        Log.d("RoutesActivity", "id da rota inserida no bd: " + rotaDao.getKey(novaRota));
 
         novaRota.setNome(title);
-        novaRota.setDistanciaIda(distanceGoing);
+        novaRota.setDistanciaIda((double) distanceGoing);
         novaRota.setIdaEVolta(goingBack);
-        novaRota.setDistanciaVolta(distanceBack);
+        novaRota.setDistanciaVolta((double) distanceBack);
         novaRota.setRepeteSemana(repeats);
-        novaRota.setRepetoicoes(repetitions);
-        novaRota.setDeRotina(deRotina);
-        novaRota.setData(new Date().getTime());
+        novaRota.setRepeticoes(repetitions);
+        novaRota.setRotineira(deRotina);
+        novaRota.setData(new Date());
 
-        rotaDao.update(novaRota);
+        new Datastore(getApplicationContext()).get()
+                .insert(novaRota);
+
+        Log.d("RoutesActivity", "id da rota inserida: " + novaRota.getId());
+
         Log.d(TAG_ROUTES_ACTIVITY, "atualizou a rota no banco");
-        calculaDistanciaTotal(session, null, null, getApplicationContext());
+        calculaDistanciaTotal(getApplicationContext(), null, null);
         onBackPressed();
     }
 

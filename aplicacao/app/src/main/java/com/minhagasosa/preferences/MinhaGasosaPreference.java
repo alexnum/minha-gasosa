@@ -4,6 +4,12 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 import com.minhagasosa.R;
+import com.minhagasosa.dao.Carro;
+import com.minhagasosa.dao.Datastore;
+import com.minhagasosa.dao.Marca;
+import com.minhagasosa.dao.Modelo;
+
+import java.util.NoSuchElementException;
 
 /**
  * Created by Vinicius Silva on 06/04/2016.
@@ -98,40 +104,50 @@ public final class MinhaGasosaPreference {
         return preferences.getFloat(context.getString(R.string.consumoUrbanoPrimario), -1);
     }
 
-    public static void setMarca(String marca, Context context) {
+    public static void setMarca(Long id, Context context) {
         SharedPreferences.Editor editor = getSharedPreference(context);
-        editor.putString(context.getString(R.string.marcaDoCarro), marca);
+        editor.putLong(context.getString(R.string.marcaDoCarro), id);
         editor.commit();
     }
 
-    public static String getMarca(Context context) {
-        final SharedPreferences preferences = context.getSharedPreferences(PREFERENCE,
-                Context.MODE_PRIVATE);
-        return preferences.getString(context.getString(R.string.marcaDoCarro), null);
+    public static Marca getMarca(Context context) {
+        SharedPreferences preferences = context.getSharedPreferences(PREFERENCE,Context.MODE_PRIVATE);
+        Long id = preferences.getLong(context.getString(R.string.marcaDoCarro), -1L);
+        return new Datastore(context).get()
+                .select(Marca.class)
+                .where(Marca.ID.eq(id))
+                .get().firstOrNull();
     }
 
-    public static void setModelo(String modelo, Context context) {
+    public static void setCarro(Long id, Context context) {
         SharedPreferences.Editor editor = getSharedPreference(context);
-        editor.putString(context.getString(R.string.modeloDoCarro), modelo);
+        editor.putLong(context.getString(R.string.modeloDoCarro), id);
         editor.commit();
     }
 
-    public static String getModelo(Context context) {
-        final SharedPreferences preferences = context.getSharedPreferences(PREFERENCE,
-                Context.MODE_PRIVATE);
-        return preferences.getString(context.getString(R.string.modeloDoCarro), null);
+    public static Carro getCarro(Context context) {
+        SharedPreferences preferences = context.getSharedPreferences(PREFERENCE, Context.MODE_PRIVATE);
+        Long id = preferences.getLong(context.getString(R.string.modeloDoCarro), -1L);
+        return new Datastore(context).get()
+                .select(Carro.class)
+                .where(Carro.ID.eq(id))
+                .get().firstOrNull();
     }
 
-    public static void setVersao(String versao, Context context) {
+    public static void setModelo(Long id, Context context) {
         SharedPreferences.Editor editor = getSharedPreference(context);
-        editor.putString(context.getString(R.string.versaoDoCarro), versao);
+        editor.putLong(context.getString(R.string.versaoDoCarro), id);
         editor.commit();
     }
 
-    public static String getVersao(Context context) {
+    public static Modelo getModelo(Context context) {
         final SharedPreferences preferences = context.getSharedPreferences(PREFERENCE,
                 Context.MODE_PRIVATE);
-        return preferences.getString(context.getString(R.string.versaoDoCarro), null);
+        Long id = preferences.getLong(context.getString(R.string.versaoDoCarro), -1L);
+        return new Datastore(context).get()
+                .select(Modelo.class)
+                .where(Modelo.ID.eq(id))
+                .get().firstOrNull();
     }
 
     public static void setConsumoUrbanoSecundario(float consumo, Context context) {

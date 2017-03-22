@@ -18,8 +18,6 @@ import com.github.mikephil.charting.formatter.PercentFormatter;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.github.mikephil.charting.utils.ColorTemplate;
-import com.minhagasosa.dao.DaoMaster;
-import com.minhagasosa.dao.DaoSession;
 import com.minhagasosa.preferences.MinhaGasosaPreference;
 
 import java.util.ArrayList;
@@ -27,6 +25,7 @@ import java.util.Date;
 import java.util.List;
 
 import static com.minhagasosa.Utils.calculaDistanciaTotal;
+import static com.minhagasosa.Utils.calculaDistanciaTotalC;
 import static com.minhagasosa.Utils.calculaPrincipaisRotas;
 
 public class ChartView {
@@ -42,38 +41,23 @@ public class ChartView {
     }
 
     public void iniciaDistanciasSemanalmente() {
-        DaoMaster.DevOpenHelper helper = new DaoMaster.DevOpenHelper(mContext, "casosa-db", null);
-        SQLiteDatabase db = helper.getWritableDatabase();
-        DaoMaster daoMaster = new DaoMaster(db);
-        DaoSession session = daoMaster.newSession();
-
         String dataAtual = new Date(System.currentTimeMillis()).toString();
 
-        Utils.calculaDistanciaTotalSemanalmente(session, null, null, mContext);
-        iniciaValoresGrafico(Utils.calculaPrincipaisRotasSemanalmente(session, null, null), getDistanciaTotal());
+        Utils.calculaDistanciaTotalSemanalmente(mContext, null, null);
+        iniciaValoresGrafico(Utils.calculaPrincipaisRotasSemanalmente(mContext, null, null), getDistanciaTotal());
     }
 
 
     public void iniciaDistancias() {
-        DaoMaster.DevOpenHelper helper = new DaoMaster.DevOpenHelper(mContext, "casosa-db", null);
-        SQLiteDatabase db = helper.getWritableDatabase();
-        DaoMaster daoMaster = new DaoMaster(db);
-        DaoSession session = daoMaster.newSession();
-
         String dataAtual = new Date(System.currentTimeMillis()).toString();
 
-        calculaDistanciaTotal(session, null, null, mContext);
-        iniciaValoresGrafico(calculaPrincipaisRotas(session, null, null), getDistanciaTotal());
+        calculaDistanciaTotalC(mContext, null, null);
+        iniciaValoresGrafico(calculaPrincipaisRotas(mContext, null, null), getDistanciaTotal());
     }
 
     public void iniciaDistancias(String month, String year) {
-        DaoMaster.DevOpenHelper helper = new DaoMaster.DevOpenHelper(mContext, "casosa-db", null);
-        SQLiteDatabase db = helper.getWritableDatabase();
-        DaoMaster daoMaster = new DaoMaster(db);
-        DaoSession session = daoMaster.newSession();
-
-        calculaDistanciaTotal(session, month, year, mContext);
-        iniciaValoresGrafico(calculaPrincipaisRotas(session, month, year), getDistanciaTotal());
+        calculaDistanciaTotalC(mContext, month, year);
+        iniciaValoresGrafico(calculaPrincipaisRotas(mContext, month, year), getDistanciaTotal());
     }
 
 
