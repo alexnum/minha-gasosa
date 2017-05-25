@@ -219,9 +219,6 @@
                 </LinearLayout>
             </LinearLayout>
 
-            <include layout="@layout/graph_content" />
-
-
             <Button
                 android:text="@string/selecione_o_m_s"
                 android:layout_width="wrap_content"

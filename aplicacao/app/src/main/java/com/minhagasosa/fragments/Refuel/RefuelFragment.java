@@ -2,11 +2,9 @@ package com.minhagasosa.fragments.Refuel;
 
 import android.app.DatePickerDialog;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.constraint.solver.Cache;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -23,11 +21,9 @@ import android.widget.Toast;
 
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.PieChart;
-import com.github.mikephil.charting.components.Description;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
-import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
 import com.minhagasosa.ChartView;
 import com.minhagasosa.NewRefuelActivity;
@@ -259,7 +255,13 @@ public class RefuelFragment extends Fragment implements  DatePickerDialog.OnDate
 
 
     private void loadData(Abastecimento mAbastecimento){
-        etDate.setText(mAbastecimento.getDataAbastecimento().toString());
+        Calendar c = Calendar.getInstance();
+        c.setTime(mAbastecimento.getDataAbastecimento());
+        int month =c.get(Calendar.MONTH)+1;
+        String data =  c.get(Calendar.DATE)+"/"+
+                month + "/"+
+                c.get(Calendar.YEAR);
+        etDate.setText(data);
         etKm.setText(mAbastecimento.getOdometro().toString());
         etLitres.setText(mAbastecimento.getLitros().toString());
         etPrice.setText(mAbastecimento.getPrecoCombustivel().toString());

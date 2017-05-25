@@ -23,6 +23,9 @@ import com.minhagasosa.dao.DaoSession;
 import com.minhagasosa.preferences.MinhaGasosaPreference;
 import com.minhagasosa.utils.DecimalDigitsInputFilter;
 
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -55,6 +58,7 @@ public class NewRefuelActivity extends AppCompatActivity implements View.OnClick
     Button btSave;
     private DatePickerDialog datePickerDialog;
     private SimpleDateFormat dateFormatter;
+    DecimalFormat df;
     Calendar newDate;
 
 
@@ -66,6 +70,8 @@ public class NewRefuelActivity extends AppCompatActivity implements View.OnClick
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         ButterKnife.bind(this);
+        df = new DecimalFormat("##.##", new DecimalFormatSymbols(Locale.US));
+        df.setRoundingMode(RoundingMode.DOWN);
         total.setFilters(new InputFilter[] {new DecimalDigitsInputFilter(5,2)});
         etDate.setFilters(new InputFilter[] {new DecimalDigitsInputFilter(5,2)});
         actualKm.setFilters(new InputFilter[] {new DecimalDigitsInputFilter(5,2)});
@@ -87,12 +93,10 @@ public class NewRefuelActivity extends AppCompatActivity implements View.OnClick
                 if(!total.getText().toString().trim().equals("")){
                     if(!gasPrice.getText().toString().trim().equals("")) {
                         float litros = Float.parseFloat(total.getText().toString()) / Float.parseFloat(gasPrice.getText().toString());
-                        String s = String.format("%.2f", litros);
-                        litres.setText(s);
+                        litres.setText(df.format(litros));
                     }else if(!litres.getText().toString().trim().equals("")) {
                         float preco = Float.parseFloat(total.getText().toString()) / Float.parseFloat(litres.getText().toString());
-                        String s = String.format("%.2f", preco);
-                        gasPrice.setText(s);
+                        gasPrice.setText(df.format(preco));
 
                     }
                 }
@@ -105,8 +109,7 @@ public class NewRefuelActivity extends AppCompatActivity implements View.OnClick
                 if(!litres.getText().toString().trim().equals("")) {
                     if (!total.getText().toString().trim().equals("")) {
                         float preco = Float.parseFloat(total.getText().toString()) / Float.parseFloat(litres.getText().toString());
-                        String s = String.format("%.2f", preco);
-                        gasPrice.setText(s);
+                        gasPrice.setText(df.format(preco));
                     }
                 }
             }
@@ -118,8 +121,7 @@ public class NewRefuelActivity extends AppCompatActivity implements View.OnClick
                 if(!gasPrice.getText().toString().trim().equals("")){
                     if(!total.getText().toString().trim().equals("")) {
                         float litros = Float.parseFloat(total.getText().toString()) / Float.parseFloat(gasPrice.getText().toString());
-                        String s = String.format("%.2f", litros);
-                        litres.setText(s);
+                        litres.setText(df.format(litros));
                     }
                 }
             }
