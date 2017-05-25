@@ -304,4 +304,6 @@
     <string name="pref_ringtone_silent">Silent</string>
 
     <string name="pref_title_vibrate">Vibrate</string>
+    <string name="historico_de_abastecimento">Refuel History</string>
+    <string name="selecione_o_m_s">Select month</string>
 </resources>
