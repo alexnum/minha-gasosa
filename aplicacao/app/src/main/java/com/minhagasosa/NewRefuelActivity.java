@@ -6,8 +6,10 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.InputFilter;
 import android.text.InputType;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -19,6 +21,7 @@ import com.minhagasosa.dao.AbastecimentoDao;
 import com.minhagasosa.dao.DaoMaster;
 import com.minhagasosa.dao.DaoSession;
 import com.minhagasosa.preferences.MinhaGasosaPreference;
+import com.minhagasosa.utils.DecimalDigitsInputFilter;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -63,13 +66,64 @@ public class NewRefuelActivity extends AppCompatActivity implements View.OnClick
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         ButterKnife.bind(this);
+        total.setFilters(new InputFilter[] {new DecimalDigitsInputFilter(5,2)});
+        etDate.setFilters(new InputFilter[] {new DecimalDigitsInputFilter(5,2)});
+        actualKm.setFilters(new InputFilter[] {new DecimalDigitsInputFilter(5,2)});
+        gasPrice.setFilters(new InputFilter[] {new DecimalDigitsInputFilter(5,2)});
+        litres.setFilters(new InputFilter[] {new DecimalDigitsInputFilter(5,2)});
         setDateTimeField();
+        initOnClidk();
         dateFormatter = new SimpleDateFormat("dd-MM-yyyy", Locale.US);
         etDate.setInputType(InputType.TYPE_NULL);
         etDate.requestFocus();
-
-
         btSave.setEnabled(false);
+
+    }
+
+    private void initOnClidk() {
+        total.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if(!total.getText().toString().trim().equals("")){
+                    if(!gasPrice.getText().toString().trim().equals("")) {
+                        float litros = Float.parseFloat(total.getText().toString()) / Float.parseFloat(gasPrice.getText().toString());
+                        String s = String.format("%.2f", litros);
+                        litres.setText(s);
+                    }else if(!litres.getText().toString().trim().equals("")) {
+                        float preco = Float.parseFloat(total.getText().toString()) / Float.parseFloat(litres.getText().toString());
+                        String s = String.format("%.2f", preco);
+                        gasPrice.setText(s);
+
+                    }
+                }
+            }
+        });
+
+        litres.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if(!litres.getText().toString().trim().equals("")) {
+                    if (!total.getText().toString().trim().equals("")) {
+                        float preco = Float.parseFloat(total.getText().toString()) / Float.parseFloat(litres.getText().toString());
+                        String s = String.format("%.2f", preco);
+                        gasPrice.setText(s);
+                    }
+                }
+            }
+        });
+
+        gasPrice.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if(!gasPrice.getText().toString().trim().equals("")){
+                    if(!total.getText().toString().trim().equals("")) {
+                        float litros = Float.parseFloat(total.getText().toString()) / Float.parseFloat(gasPrice.getText().toString());
+                        String s = String.format("%.2f", litros);
+                        litres.setText(s);
+                    }
+                }
+            }
+        });
 
     }
 
@@ -107,45 +161,9 @@ public class NewRefuelActivity extends AppCompatActivity implements View.OnClick
         return newDate.getTime();
     }
 
-
-
-
-
-    @OnTextChanged(value = {R.id.etTotalPrice},
+    @OnTextChanged(value = {R.id.etKM, R.id.etNovaData,R.id.etPrice,R.id.etLitres,R.id.etTotalPrice},
             callback = OnTextChanged.Callback.AFTER_TEXT_CHANGED)
-    void checkTotal() {
-//        if(!total.getText().toString().trim().equals("")){
-//            if(!litres.getText().toString().trim().equals("")) {
-//                float preco = Float.parseFloat(total.getText().toString()) / Float.parseFloat(litres.getText().toString());
-//                gasPrice.setText(String.valueOf(preco));
-//            }else if(!gasPrice.getText().toString().trim().equals("")) {
-//                float litros = Float.parseFloat(total.getText().toString()) * Float.parseFloat(gasPrice.getText().toString());
-//                litres.setText(String.valueOf(litros));
-//            }
-//        }
-        validateFields();
-    }
-
-    @OnTextChanged(value = {R.id.etLitres},
-            callback = OnTextChanged.Callback.AFTER_TEXT_CHANGED)
-    void checkLitres() {
-        validateFields();
-    }
-
-    @OnTextChanged(value = {R.id.etPrice},
-            callback = OnTextChanged.Callback.AFTER_TEXT_CHANGED)
-    void checkPrice() {
-        validateFields();
-    }
-
-    @OnTextChanged(value = {R.id.etNovaData},
-            callback = OnTextChanged.Callback.AFTER_TEXT_CHANGED)
-    void checkData() {
-        validateFields();
-    }
-    @OnTextChanged(value = {R.id.etKM},
-            callback = OnTextChanged.Callback.AFTER_TEXT_CHANGED)
-    void checkKm() {
+    void check() {
         validateFields();
     }
 
