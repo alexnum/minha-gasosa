@@ -297,6 +297,11 @@ public class RefuelFragment extends Fragment implements  DatePickerDialog.OnDate
             double kmLitre = mGenerator.getKmPerLitre();
             if(kmLitre>0){
                 etKmPerL.setText(String.valueOf(kmLitre));
+                // Alteração momentanea para salvar o consumo por litro
+                MinhaGasosaPreference.setConsumoUrbanoPrimario((float) kmLitre, getContext());
+                MinhaGasosaPreference.setConsumoUrbanoSecundario((float) kmLitre, getContext());
+                MinhaGasosaPreference.setConsumoRodoviarioPrimario((float) kmLitre, getContext());
+                MinhaGasosaPreference.setConsumoRodoviarioSecundario((float) kmLitre, getContext());
             }else {
                 etKmPerL.setText("ND");
             }

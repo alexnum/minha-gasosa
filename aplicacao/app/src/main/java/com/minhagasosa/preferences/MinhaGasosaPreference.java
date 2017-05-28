@@ -167,8 +167,6 @@ public final class MinhaGasosaPreference {
         editor.commit();
     }
 
-
-
     public static float getConsumoRodoviarioSecundario(Context context) {
         final SharedPreferences preferences = context.getSharedPreferences(PREFERENCE,
                 Context.MODE_PRIVATE);

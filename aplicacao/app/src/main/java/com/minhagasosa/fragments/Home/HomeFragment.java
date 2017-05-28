@@ -443,21 +443,19 @@ public class HomeFragment extends Fragment implements GoogleApiClient.OnConnecti
      */
 
     private float getDistanciaTotal() {
-        float f = MinhaGasosaPreference.getDistanciaTotal(getContext());
-                Log.e("Distancia totaaaall ", String.valueOf(f));
+        float distanciaTotal = MinhaGasosaPreference.getDistanciaTotal(getContext());
+        Log.e("getDistanciaTotal()", String.valueOf(distanciaTotal));
 
-        return MinhaGasosaPreference.getDistanciaTotal(getContext());
+        return distanciaTotal;
     }
 
     /**
      * @return
      */
     private float getConsumoUrbano() {
-        float f = MinhaGasosaPreference.
-                getConsumoUrbanoPrimario(getContext());
-        Log.e("Consumo Urbanooooo ", String.valueOf(f));
-        return MinhaGasosaPreference.
-                getConsumoUrbanoPrimario(getContext());
+        float consumo = MinhaGasosaPreference.getConsumoUrbanoPrimario(getContext());
+        Log.e("getConsumoUrbano() ", String.valueOf(consumo));
+        return consumo;
     }
 
     /**
