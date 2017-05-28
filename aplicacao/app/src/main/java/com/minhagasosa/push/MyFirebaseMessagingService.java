@@ -1,4 +1,4 @@
-package com.minhagasosa;
+package com.minhagasosa.push;
 
 import android.content.Intent;
 import android.util.Log;

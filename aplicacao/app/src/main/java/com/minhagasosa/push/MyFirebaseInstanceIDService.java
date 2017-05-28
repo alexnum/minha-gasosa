@@ -1,4 +1,4 @@
-package com.minhagasosa;
+package com.minhagasosa.push;
 
 import android.content.SharedPreferences;
 import android.util.Log;
@@ -7,6 +7,7 @@ import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.FirebaseInstanceIdService;
 import com.minhagasosa.API.GasStationService;
 import com.minhagasosa.API.UsersService;
+import com.minhagasosa.LoginActivity;
 import com.minhagasosa.activites.EndpointFactory;
 
 import okhttp3.ResponseBody;

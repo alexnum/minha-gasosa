@@ -1,4 +1,4 @@
-package com.minhagasosa;
+package com.minhagasosa.push;
 
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -7,6 +7,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.support.v4.app.NotificationCompat;
+
+import com.minhagasosa.R;
 
 /**
  * Created by elyervesson on 22/05/17.
@@ -27,12 +29,12 @@ public class MyNotificationManager {
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
         Notification notificationFCM = builder
-                .setSmallIcon(R.mipmap.ic_gas_station_black_24dp)
+                .setSmallIcon(R.mipmap.ic_new_releases_white_24dp)
                 .setAutoCancel(true)
                 .setContentIntent(pendingIntent)
                 .setContentTitle(from)
                 .setContentText(notification)
-                .setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.mipmap.ic_gas_station_black_24dp))
+                //.setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.mipmap.ic_gas_station_black_24dp))
                 .build();
 
         notificationFCM.flags |= Notification.FLAG_AUTO_CANCEL;
