@@ -7,16 +7,11 @@ import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 import com.minhagasosa.activites.NavigationActivity;
 
-/**
- * Created by elyervesson on 22/05/17.
- */
 
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
-        // ...
-
         // TODO(developer): Handle FCM messages here.
         // Not getting messages here? See why this may be: https://goo.gl/39bRNJ
         Log.d("Firebase", "From: " + remoteMessage.getFrom());
@@ -38,6 +33,6 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
     public void notifyUser(String from, String notification) {
         MyNotificationManager myNotificationManager = new MyNotificationManager(getApplicationContext());
-        myNotificationManager.showNotification(from, notification, new Intent(getApplicationContext(), NavigationActivity.class));
+        myNotificationManager.showNotification(from, notification, "58accbcac82ec814fd3e2235");
     }
 }

@@ -3,6 +3,7 @@ package com.minhagasosa.activites.maps;
 import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -77,6 +78,7 @@ public class GasStationActivity extends BaseActivity {
     private final int CARD_ICON_WIDTH = 85;
 
     private Button more_comments;
+    private ProgressDialog dialog;
 
     List<Comments> comments;
     ListView m_listServices;
@@ -93,32 +95,34 @@ public class GasStationActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         mComments = new ArrayList<>();
         comments = new ArrayList<>();
+
         Intent intent = this.getIntent();
         Bundle bundle = intent.getExtras();
 
         mGasService = retrofit.create(GasStationService.class);
-        final GasStation g = (GasStation) bundle.getParcelable("gas");
-        mGas = g;
+        final String idGas = bundle.getString("gas");
 
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
         setContentView(R.layout.activity_gas_station);
-        initMembers();
-        mGasService.getGasStation(g.getId()).enqueue(new Callback<GasStation>() {
+
+        dialog = new ProgressDialog(this);
+        dialog.setMessage("Carregando");
+        dialog.show();
+        mGasService.getGasStation(idGas).enqueue(new Callback<GasStation>() {
             @Override
             public void onResponse(Call<GasStation> call, Response<GasStation> response) {
+
                 mGas = response.body();
                 initMembers();
+                dialog.dismiss();
             }
 
             @Override
             public void onFailure(Call<GasStation> call, Throwable t) {
-                mGas = g;
-                initMembers();
+                dialog.dismiss();
+                Toast.makeText(GasStationActivity.this,"Não foi possivel recuperar as informações do posto", Toast.LENGTH_SHORT).show();
             }
         });
-
-
-
     }
 
     private void initMembers() {

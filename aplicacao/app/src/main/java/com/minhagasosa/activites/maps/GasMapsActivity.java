@@ -132,15 +132,6 @@ public class GasMapsActivity extends BaseFragmentActivity
                         TextView tvOpenning = (TextView) v.findViewById(R.id.tv_openning);
                         ImageButton bt_details = (ImageButton) v.findViewById(R.id.bt_gasStationsButton);
 
-//                        bt_details.setOnClickListener(new View.OnClickListener() {
-//                            @Override
-//                            public void onClick(View view) {
-//                                Intent i = new Intent(GasMapsActivity.this, GasStationActivity.class);
-//                                i.putExtra("gas", (Serializable) gas);
-//                                startActivity(i);
-//
-//                            }
-//                        });
                         tvTitle.setText(marker.getTitle());
                         tvDetails.setText(marker.getSnippet());
                         tvOpenning.setText("Aberto das 7:00 ás 21:00 horas");
@@ -185,7 +176,7 @@ public class GasMapsActivity extends BaseFragmentActivity
                         GasStation gas = allMarkersMap.get(marker);
 
                         Intent i = new Intent(GasMapsActivity.this, GasStationActivity.class);
-                        i.putExtra("gas", gas);
+                        i.putExtra("gas", gas.getId());
                         startActivity(i);
                     }
                 });

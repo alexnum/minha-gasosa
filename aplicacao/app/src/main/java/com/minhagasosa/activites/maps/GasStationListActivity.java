@@ -125,7 +125,7 @@ public class GasStationListActivity extends BaseActivity {
                         GasStation selectedGasStation = gasStation.get(position);
 
                         Intent i = new Intent(GasStationListActivity.this, GasStationActivity.class);
-                        i.putExtra("gas", selectedGasStation);
+                        i.putExtra("gas", selectedGasStation.getId());
                         startActivity(i);
                     }
                 });
