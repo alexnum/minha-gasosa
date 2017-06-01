@@ -1,11 +1,9 @@
 package com.minhagasosa.push;
 
-import android.content.Intent;
 import android.util.Log;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
-import com.minhagasosa.activites.NavigationActivity;
 
 
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
@@ -28,11 +26,15 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
         // Also if you intend on generating your own notifications as a result of a received FCM
         // message, here is where that should be initiated. See sendNotification method below.
-        notifyUser(remoteMessage.getFrom(), remoteMessage.getNotification().getBody());
+        notifyUser(
+                remoteMessage.getNotification().getTitle(),
+                remoteMessage.getNotification().getBody(),
+                remoteMessage.getData().get("gas"),
+                remoteMessage.getNotification().getIcon());
     }
 
-    public void notifyUser(String from, String notification) {
+    public void notifyUser(String title, String notification, String idPosto, String icon) {
         MyNotificationManager myNotificationManager = new MyNotificationManager(getApplicationContext());
-        myNotificationManager.showNotification(from, notification, "58accbcac82ec814fd3e2235");
+        myNotificationManager.showNotification(title, notification, idPosto, icon);
     }
 }

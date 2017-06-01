@@ -7,7 +7,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v4.app.NotificationCompat;
 
-import com.minhagasosa.R;
 import com.minhagasosa.activites.maps.GasStationActivity;
 
 
@@ -21,17 +20,18 @@ public class MyNotificationManager {
         this.context = context;
     }
 
-    //public void showNotification(String from, String notification, Intent intent) {
-    public void showNotification(String from, String notification, String id) {
+    public void showNotification(String from, String notification, String id, String icon) {
 
         Intent intent = new Intent(context, GasStationActivity.class);
         intent.putExtra("gas", id);
 
         PendingIntent pendingIntent = PendingIntent.getActivity(context, NOTIFICATION_ID, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
+        int picId = context.getResources().getIdentifier(icon, "drawable", context.getPackageName());
+
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
         Notification notificationFCM = builder
-                .setSmallIcon(R.mipmap.ic_new_releases_white_24dp)
+                .setSmallIcon(picId)
                 .setAutoCancel(true)
                 .setContentIntent(pendingIntent)
                 .setContentTitle(from)

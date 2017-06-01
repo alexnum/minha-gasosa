@@ -7,7 +7,6 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.content.res.Resources;
 import android.location.Address;
 import android.location.Geocoder;
 import android.net.Uri;
@@ -59,7 +58,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -93,6 +91,9 @@ public class GasStationActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        Log.d("NotificationLOG", "GasStationActivity onCreate");
+
         mComments = new ArrayList<>();
         comments = new ArrayList<>();
 

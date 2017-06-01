@@ -46,6 +46,7 @@ import com.minhagasosa.Transfer.TUser;
 import com.minhagasosa.activites.BaseActivity;
 import com.minhagasosa.activites.EndpointFactory;
 import com.minhagasosa.activites.NavigationActivity;
+import com.minhagasosa.activites.maps.GasStationActivity;
 import com.minhagasosa.push.MyFirebaseInstanceIDService;
 
 import java.io.IOException;
@@ -94,7 +95,6 @@ public class LoginActivity extends BaseActivity implements GoogleApiClient.OnCon
     UsersService m_usersService;
     LocationService m_locationService;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -119,8 +119,10 @@ public class LoginActivity extends BaseActivity implements GoogleApiClient.OnCon
         this.tipoAcesso = tipoAcesso;
 
         if (logado) {
+            Log.d("NotificationLOG", "LoginActivity if");
             skipSplash();
         } else {
+            Log.d("NotificationLOG", "LoginActivity else");
             if (!skip) {
                 skip = true;
                 if (logado) {
@@ -144,9 +146,16 @@ public class LoginActivity extends BaseActivity implements GoogleApiClient.OnCon
     }
 
     private void skipSplash() {
+        Log.d("NotificationLOG", "LoginActivity updateUI");
         //signInGoogleButton.setVisibility(SignInButton.INVISIBLE);
         signInFacebookButton.setVisibility(View.VISIBLE);
         updateUI();
+
+        Bundle bundle = getIntent().getExtras();
+        if (bundle != null) {
+            Log.d("NotificationLOG", "LoginActivity bundle not null");
+            checkIntent(bundle);
+        }
     }
 
     private void updateUI() {
@@ -564,6 +573,15 @@ public class LoginActivity extends BaseActivity implements GoogleApiClient.OnCon
                 }
 
             }
+        }
+    }
+
+    public void checkIntent(Bundle bundle) {
+        if (bundle.getString("gas") != null) {
+            Intent intent = new Intent(this, GasStationActivity.class);
+            intent.putExtra("gas", bundle.getString("gas"));
+            Log.d("NotificationLOG", "LoginActivity startActivity");
+            this.startActivity(intent);
         }
     }
 }

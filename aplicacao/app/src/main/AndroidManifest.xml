@@ -91,7 +91,9 @@
             android:configChanges="orientation"
             android:label="@string/title_activity_gas_station"
             android:noHistory="true"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait" >
+        </activity>
+
         <activity
             android:name=".activites.maps.GasStationListActivity"
             android:configChanges="orientation"
