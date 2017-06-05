@@ -29,6 +29,7 @@ import com.minhagasosa.R;
 import com.minhagasosa.activites.maps.GasMapsActivity;
 import com.minhagasosa.fragments.Home.HomeFragment;
 import com.minhagasosa.fragments.Refuel.RefuelFragment;
+import com.minhagasosa.fragments.Settings.SettingsFragment;
 import com.minhagasosa.fragments.expenditureplanning.ExpenditurePlanningFragment;
 import com.minhagasosa.fragments.listroutes.ListRoutesFragment;
 import com.minhagasosa.fragments.weeklydetailing.WeeklyDetailingFragment;
@@ -174,6 +175,12 @@ public class NavigationActivity extends AppCompatActivity implements NavigationV
                 Intent i = new Intent(this, LoginActivity.class);
                 i.putExtra("fromHome", true);
                 startActivity(i);
+                break;
+            case R.id.config:
+                fragment = new SettingsFragment();
+                ft = getSupportFragmentManager().beginTransaction();
+                ft.replace(R.id.content_frame, fragment);
+                ft.commit();
                 break;
 
         }

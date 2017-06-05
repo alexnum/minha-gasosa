@@ -4,4 +4,6 @@
     <string name="postos_de_gasolina">Postos de gasolina</string>
     <string name="historico_de_abastecimento">Historico de Abastecimento</string>
     <string name="selecione_o_m_s">Selecione o mês</string>
+    <string name="configuracoes">Configurações</string>
+    <string name="receive_notification">Receber Notificações</string>
 </resources>

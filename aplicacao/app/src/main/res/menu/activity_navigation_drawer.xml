@@ -40,7 +40,12 @@
                 android:id="@+id/nav_logout"
                 android:icon="@drawable/ic_sair"
                 android:title="Sair" />
+            <item
+                android:id="@+id/config"
+                android:icon="@drawable/ic_build_black_24dp"
+                android:title="Configurações" />
         </menu>
+
     </item>
 
 </menu>
