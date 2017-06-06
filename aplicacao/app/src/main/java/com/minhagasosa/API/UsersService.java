@@ -34,4 +34,10 @@ public interface UsersService {
     @POST("user/update-token/{token}")
     public Call<ResponseBody> updateUserToken(
             @Path("token") String token);
+
+    @POST("user/remove-token")
+    public Call<ResponseBody> removeToken();
+
+    @POST("user/restore-token")
+    public Call<ResponseBody> restoreToken();
 }

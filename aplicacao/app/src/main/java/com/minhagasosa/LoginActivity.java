@@ -163,17 +163,20 @@ public class LoginActivity extends BaseActivity implements GoogleApiClient.OnCon
         String fbToken = sharedPreferences.getString(MyFirebaseInstanceIDService.FIREBASE_TOKEN, "");
         Retrofit retrofit  = EndpointFactory.buildEndpoint(getBaseContext());
         UsersService usersService = retrofit.create(UsersService.class);
-        usersService.updateUserToken(fbToken).enqueue(new Callback<ResponseBody>() {
-            @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                Log.d("Firebase", "Token updated on server");
-            }
+        boolean notificationsOn = sharedPreferences.getBoolean("FBACTIVE", true);
+        if(notificationsOn){
+            usersService.updateUserToken(fbToken).enqueue(new Callback<ResponseBody>() {
+                @Override
+                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                    Log.d("Firebase", "Token updated on server");
+                }
 
-            @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-                Log.e("Firebase", "Error updating token updated on server");
-            }
-        });
+                @Override
+                public void onFailure(Call<ResponseBody> call, Throwable t) {
+                    Log.e("Firebase", "Error updating token updated on server");
+                }
+            });
+        }
         if (!isActivityRunning(NavigationActivity.class) && !closed) {
             startActivity(new Intent(this, NavigationActivity.class));
         }
