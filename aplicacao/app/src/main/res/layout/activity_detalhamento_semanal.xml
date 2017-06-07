@@ -18,7 +18,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="15dp"
-            android:text="Veja os gastos detalhados desta semana"
+            android:text="Veja os gastos detalhados do mês selecionado"
             android:textAppearance="@style/TextAppearance.AppCompat.Widget.ActionBar.Title" />
         <!--
         <TextView
@@ -48,11 +48,19 @@
             <!--android:layout_height="300dp"-->
             <!--android:layout_marginTop="20dp" />-->
 
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/bt_change_month"
+            android:text="Mudar Mês" />
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="As principais rotas extras desta semana são:"
-            android:textAppearance="@style/TextAppearance.AppCompat.Widget.ActionMode.Subtitle" />
+            android:layout_marginBottom="15dp"
+            android:id="@+id/tv_selected_month"
+            android:text=""
+            android:textAppearance="@style/TextAppearance.AppCompat.Widget.ActionBar.Title" />
 
         <com.github.mikephil.charting.charts.PieChart
             android:id="@+id/chart_current_month"

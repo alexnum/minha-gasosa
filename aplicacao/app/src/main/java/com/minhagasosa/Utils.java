@@ -9,9 +9,11 @@ import com.minhagasosa.dao.DaoSession;
 import com.minhagasosa.dao.Rota;
 import com.minhagasosa.preferences.MinhaGasosaPreference;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -73,27 +75,39 @@ public final class Utils {
 
         ArrayList<Rota> listaRotas = (ArrayList<Rota>) listRotas(session, select);
         List<Pair<String, Float>> listaRotaDistancia = new ArrayList<>();
-
+        ArrayList<Rota> rotasFiltradas = new ArrayList<Rota>();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
         for (int i = ZERO; i < listaRotas.size(); i++) {
-            String data = listaRotas.get(i).getData().toString();
-
-            if (ano == null && mes == null ||
-                    ano.equals(data.substring(TWENTYFOUR)) && mes.equals(data.substring(FOUR, SEVEN))) {
-                float atual;
-                if (listaRotas.get(i).getIdaEVolta()) {
-                    atual = listaRotas.get(i).getDistanciaIda() + listaRotas.get(i).getDistanciaVolta();
-                    if (listaRotas.get(i).getRepeteSemana()) {
-                        atual = atual * listaRotas.get(i).getRepetoicoes();
-                    }
-                } else {
-                    atual = listaRotas.get(i).getDistanciaIda();
-                    if (listaRotas.get(i).getRepeteSemana()) {
-                        atual = atual * listaRotas.get(i).getRepetoicoes();
-                    }
+            try {
+                Date dataRota = listaRotas.get(i).getData();
+                Date date1 = dateFormat.parse(mes + "/01/" + ano);
+                Calendar c = Calendar.getInstance();
+                c.setTime(date1);
+                c.set(Calendar.DAY_OF_MONTH, c.getActualMaximum(Calendar.DAY_OF_MONTH));
+                Date date2 = dateFormat.parse( mes + "/"+String.format("%02d", (Integer)c.get(Calendar.DAY_OF_MONTH))+"/" + ano);
+                if(date1.compareTo(dataRota) * dataRota.compareTo(date2) > 0){
+                    rotasFiltradas.add(listaRotas.get(i));
                 }
-                Log.e("RoutesDistancia", "Indice: " + i + " " + listaRotas.get(i).getNome() + ": " + atual + " " + listaRotas.get(i).getData());
-                listaRotaDistancia.add(new Pair<>(listaRotas.get(i).getNome(), atual));
+            } catch (ParseException e) {
+                e.printStackTrace();
             }
+        }
+
+        for (int i = ZERO; i < rotasFiltradas.size(); i++) {
+            float atual;
+            if (rotasFiltradas.get(i).getIdaEVolta()) {
+                atual = rotasFiltradas.get(i).getDistanciaIda() + rotasFiltradas.get(i).getDistanciaVolta();
+                if (rotasFiltradas.get(i).getRepeteSemana()) {
+                    atual = atual * rotasFiltradas.get(i).getRepetoicoes();
+                }
+            } else {
+                atual = rotasFiltradas.get(i).getDistanciaIda();
+                if (rotasFiltradas.get(i).getRepeteSemana()) {
+                    atual = atual * rotasFiltradas.get(i).getRepetoicoes();
+                }
+            }
+            Log.e("RoutesDistancia", "Indice: " + i + " " + rotasFiltradas.get(i).getNome() + ": " + atual + " " + rotasFiltradas.get(i).getData());
+            listaRotaDistancia.add(new Pair<>(rotasFiltradas.get(i).getNome(), atual));
         }
         return listaRotaDistancia;
     }

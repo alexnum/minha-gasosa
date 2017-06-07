@@ -41,6 +41,8 @@ public class ChartView {
         this.mChart = chart;
     }
 
+
+
     public void iniciaDistanciasSemanalmente() {
         DaoMaster.DevOpenHelper helper = new DaoMaster.DevOpenHelper(mContext, "casosa-db", null);
         SQLiteDatabase db = helper.getWritableDatabase();
@@ -120,6 +122,10 @@ public class ChartView {
 
             addChart();
         }
+    }
+
+    public void clearChart(){
+        mChart.clear();
     }
 
     private void addChart() {

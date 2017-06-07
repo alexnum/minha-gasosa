@@ -540,7 +540,10 @@ public class HomeFragment extends Fragment implements GoogleApiClient.OnConnecti
     @Override
     public final void onResume() {
         super.onResume();
-        chartView.iniciaDistancias();
+        Calendar c = Calendar.getInstance();
+        int year = c.get(Calendar.YEAR);
+        int month = c.get(Calendar.MONTH);
+        chartView.iniciaDistancias(String.format("%02d", month + 1), String.format("%04d", year));
     }
 
     @Override
