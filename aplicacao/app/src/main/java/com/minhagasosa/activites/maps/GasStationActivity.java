@@ -122,6 +122,7 @@ public class GasStationActivity extends BaseActivity {
             public void onFailure(Call<GasStation> call, Throwable t) {
                 dialog.dismiss();
                 Toast.makeText(GasStationActivity.this,"Não foi possivel recuperar as informações do posto", Toast.LENGTH_SHORT).show();
+                finish();
             }
         });
     }
