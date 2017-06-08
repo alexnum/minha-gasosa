@@ -20,8 +20,8 @@
             android:layout_marginBottom="15dp"
             android:text="Veja os gastos detalhados do mês selecionado"
             android:textAppearance="@style/TextAppearance.AppCompat.Widget.ActionBar.Title" />
-        <!--
-        <TextView
+
+        <!--<TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="15dp"
@@ -48,19 +48,30 @@
             <!--android:layout_height="300dp"-->
             <!--android:layout_marginTop="20dp" />-->
 
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:id="@+id/tv_selected_month"
+            android:textSize="20sp"
+            android:textColor="@android:color/black"
+            android:layout_gravity="center_horizontal"
+            android:text="" />
+
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/bt_change_month"
-            android:text="Mudar Mês" />
+            android:layout_gravity="center_horizontal"
+            android:background="@color/colorPrimary"
+            android:textColor="@android:color/white"
+            android:layout_marginTop="25dp"
+            android:padding="10dp"
+            android:text="Selecionar Mês" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="15dp"
-            android:id="@+id/tv_selected_month"
-            android:text=""
-            android:textAppearance="@style/TextAppearance.AppCompat.Widget.ActionBar.Title" />
+
+            <!-- android:textAppearance="@style/TextAppearance.AppCompat.Widget.ActionBar.Title" -->
+
 
         <com.github.mikephil.charting.charts.PieChart
             android:id="@+id/chart_current_month"

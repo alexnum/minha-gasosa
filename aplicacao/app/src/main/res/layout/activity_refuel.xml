@@ -3,6 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.minhagasosa.activites.NavigationActivity">
@@ -18,24 +19,65 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
-            <LinearLayout
+
+            <android.support.v7.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:weightSum="1">
+                android:layout_gravity="center"
+                android:layout_margin="10dp"
+                android:elevation="3dp"
+                card_view:cardCornerRadius="2dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:layout_weight="0.3">
+                    android:orientation="vertical">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginStart="10dp"
+                        android:text="Consumo Atual"
+                        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_horizontal">
+                        <EditText
+                            android:id="@+id/etKMperLitre"
+                            android:layout_gravity="center"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="5dp"
+                            android:layout_marginRight="5dp"
+                            android:ems="3"
+                            android:inputType="numberDecimal" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="5dp"
+                            android:layout_gravity="center"
+                            android:text="KM/L"
+                            android:textAppearance="?android:attr/textAppearanceMedium" />
+                    </LinearLayout>
+                </LinearLayout>
+
+            </android.support.v7.widget.CardView>
+                <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:weightSum="1">
 
                     <TextView
                         android:id="@+id/etSelectRefuel"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
-                        android:text="Selecione um abastecimento"
+                        android:layout_marginStart="10dp"
+                        android:text="Abastecimentos"
                         android:textAppearance="?android:attr/textAppearanceMedium" />
 
                     <Spinner
@@ -43,38 +85,37 @@
                         android:layout_width="wrap_content"
                         android:layout_marginTop="6dp"
                         android:layout_height="wrap_content" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:layout_weight="0.7">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
-                        android:layout_gravity="center"
-                        android:text="KM/L"
-                        android:textAppearance="?android:attr/textAppearanceMedium" />
-
-                    <EditText
-                        android:id="@+id/etKMperLitre"
-                        android:layout_gravity="center"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="6dp"
-                        android:ems="3"
-                        android:inputType="numberDecimal" />
-                </LinearLayout>
-
             </LinearLayout>
+
+        <android.support.v7.widget.CardView
+            android:id="@+id/card_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="10dp"
+            android:elevation="3dp"
+            card_view:cardCornerRadius="2dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:gravity="center_vertical"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginStart="10dp"
+                    android:text="Detalhes"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
+                android:layout_marginStart="10dp"
                 android:weightSum="1">
 
                 <LinearLayout
@@ -96,7 +137,7 @@
                         android:id="@+id/etTotal"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="6dp"
+                        android:layout_marginTop="3dp"
                         android:ems="10"
                         android:inputType="numberDecimal" />
                 </LinearLayout>
@@ -117,7 +158,7 @@
                         android:id="@+id/etPrice"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="6dp"
+                        android:layout_marginTop="3dp"
                         android:ems="10"
                         android:inputType="numberDecimal" />
 
@@ -139,7 +180,7 @@
                         android:id="@+id/cbFullTank"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="6dp"
+                        android:layout_marginTop="3dp"
                         android:ems="10"/>
 
                 </LinearLayout>
@@ -149,6 +190,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
+                android:layout_marginStart="10dp"
                 android:layout_weight="1">
 
                 <LinearLayout
@@ -169,7 +211,7 @@
                         android:id="@+id/etLitres"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="6dp"
+                        android:layout_marginTop="3dp"
                         android:ems="10"
                         android:inputType="numberDecimal" />
                 </LinearLayout>
@@ -190,7 +232,7 @@
                         android:id="@+id/etKM"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="6dp"
+                        android:layout_marginTop="3dp"
                         android:ems="10"
                         android:inputType="numberDecimal" />
 
@@ -213,21 +255,28 @@
                         android:id="@+id/etDate"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="6dp"
+                        android:layout_marginTop="3dp"
                         android:ems="10"/>
 
                 </LinearLayout>
             </LinearLayout>
-
+            </LinearLayout>
+            </android.support.v7.widget.CardView>
             <Button
                 android:text="@string/selecione_o_m_s"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/bt_select_month"
+                android:background="@color/colorPrimary"
+                android:textColor="@android:color/white"
+                android:padding="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center"
                 android:layout_below="@+id/textViewPrincipaisRotas"
                 android:layout_alignParentStart="true" />
 
-            <include layout="@layout/graph_refuel_content" />
+            <include layout="@layout/graph_refuel_content"/>
 
         </LinearLayout>
 

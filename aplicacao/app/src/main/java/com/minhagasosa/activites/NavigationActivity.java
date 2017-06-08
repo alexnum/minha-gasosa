@@ -151,15 +151,6 @@ public class NavigationActivity extends AppCompatActivity implements NavigationV
                 ft.replace(R.id.content_frame, fragment);
                 ft.commit();
                 break;
-      //   case R.id.nav_set_car:
-//                fragment = new myCarFragment();
-//                ft = getSupportFragmentManager().beginTransaction();
-//                Bundle argsCar = new Bundle();
-//                argsCar.putBoolean("fromHome", true);
-//                fragment.setArguments(argsCar);
-//                ft.replace(R.id.content_frame, fragment);
-//                ft.commit();
-//                break;
             case R.id.nav_gasStations:
                 Intent intent = new Intent(this, GasMapsActivity.class);
                 startActivity(intent);
