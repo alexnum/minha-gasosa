@@ -23,6 +23,7 @@ import com.minhagasosa.dao.RotaDao;
 
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 import static com.minhagasosa.Utils.calculaDistanciaTotal;
@@ -256,7 +257,11 @@ public class RoutesActivity extends AppCompatActivity {
 
         rotaDao.update(novaRota);
         Log.d(TAG_ROUTES_ACTIVITY, "atualizou a rota no banco");
-        calculaDistanciaTotal(session, null, null, getApplicationContext());
+
+        int year = Calendar.getInstance().get(Calendar.YEAR);
+        int month = Calendar.getInstance().get(Calendar.MONTH);
+        calculaDistanciaTotal(session, String.format("%02d", month + 1), String.format("%04d", year), getApplicationContext());
+        //calculaDistanciaTotal(session, null, null, getApplicationContext());
         onBackPressed();
     }
 

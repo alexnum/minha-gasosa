@@ -308,4 +308,5 @@
     <string name="selecione_o_m_s">Select month</string>
     <string name="configuracoes">Settings</string>
     <string name="receive_notification">Receive Notifications></string>
+    <string name="sem_consumo_do_carro">Para visualizar os valores de consumo semanal e mensal é necessario registrar ao menos dois \'tanques cheio\' na sessão abastecimento!</string>
 </resources>

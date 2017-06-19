@@ -53,6 +53,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -580,6 +581,7 @@ public class LoginActivity extends BaseActivity implements GoogleApiClient.OnCon
     }
 
     public void checkIntent(Bundle bundle) {
+        Set<String> set = bundle.keySet();
         if (bundle.getString("gas") != null) {
             Intent intent = new Intent(this, GasStationActivity.class);
             intent.putExtra("gas", bundle.getString("gas"));

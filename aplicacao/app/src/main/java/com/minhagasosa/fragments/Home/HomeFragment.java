@@ -24,6 +24,7 @@ import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -43,14 +44,9 @@ import java.text.DecimalFormat;
 import java.util.Calendar;
 
 
-/**
- * A simple {@link Fragment} subclass.
- */
 public class HomeFragment extends Fragment implements GoogleApiClient.OnConnectionFailedListener {
 
 
-    private String Home = "HomeActivity";
-    private String R$ = "R$ ";
     /**
      * preco do combustivel primario
      */
@@ -60,59 +56,10 @@ public class HomeFragment extends Fragment implements GoogleApiClient.OnConnecti
      */
     private EditText priceFuelEditText2;
     /**
-     * texto
-     */
-    private TextView secundarioText;
-    /**
-     * texto
-     */
-    private TextView secundarioPriceText;
-    /**
-     * marcador de flex no carro
-     */
-    private CheckBox checkFlex;
-    /**
-     * atribute
-     */
-    private TextView porcentagem1;
-    /**
-     * atribute
-     */
-    private TextView porcentagem2;
-    /**
-     * atribute
-     */
-    private TextView consumoS;
-    /**
-     * atribute
-     */
-    private TextView consumoM;
-    /**
-     * atribute
-     */
-    private TextView porcento1;
-    /**
-     * atribute
-     */
-    private TextView porcento2;
-    /**
-     * atribute
-     */
-    private Spinner spinnerPorcentagem1;
-    /**
-     * atribute
-     */
-    private Spinner spinnerPorcentagem2;
-    /**
-     * atribute
-     */
-    private ScrollView layoutMain;
-    /**
      * string de porcentagens da capacidade do tanque do carro
      */
     private String[] porcento = {"0", "5", "10", "15", "20", "25", "30", "35", "40", "45", "50",
             "55", "60", "65", "70", "75", "80", "85", "90", "95", "100"};
-
     /**
      *
      */
@@ -121,13 +68,15 @@ public class HomeFragment extends Fragment implements GoogleApiClient.OnConnecti
      * valor maximo que pode gastar
      */
     private float valorMaximoGastar;
-    /**
-     * atribute
-     */
+    private String R$ = "R$ ";
+    private String Home = "HomeActivity";
+    private CheckBox checkFlex;
+    private TextView secundarioPriceText ,secundarioText,porcentagem1,porcentagem2, consumoS, consumoM, porcento1, porcento2;
+    private Spinner spinnerPorcentagem1, spinnerPorcentagem2;
     private ChartView chartView;
-
+    private ScrollView layoutMain;
+    private LinearLayout layoutConsumoSemanal, layoutConsumoMensal, layoutMensagemErro;
     private PendingIntent pendingIntent;
-
 
 
     @Override
@@ -158,6 +107,12 @@ public class HomeFragment extends Fragment implements GoogleApiClient.OnConnecti
         spinnerPorcentagem2 = (Spinner) view.findViewById(R.id.spinner2);
         spinnerPorcentagem2.setAdapter(new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, porcento));
         spinnerPorcentagem2.setVisibility(View.GONE);
+
+        // Correção no problema de consumo mensal e semanal negativo
+        layoutConsumoSemanal = (LinearLayout) view.findViewById(R.id.layout_consumo_semanal);
+        layoutConsumoMensal = (LinearLayout) view.findViewById(R.id.layout_consumo_mensal);
+        layoutMensagemErro = (LinearLayout) view.findViewById(R.id.layout_mensagem_adicionar_consumo);
+
         layoutMain = (ScrollView) view.findViewById(R.id.layout_main);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -263,7 +218,21 @@ public class HomeFragment extends Fragment implements GoogleApiClient.OnConnecti
         return view;
     }
 
-
+    @Override
+    public void onStart() {
+        super.onStart();
+        // Correção no problema de consumo mensal e semanal negativo
+        if (getConsumoUrbano() == -1) {
+            layoutConsumoSemanal.setVisibility(View.GONE);
+            layoutConsumoMensal.setVisibility(View.GONE);
+            layoutMensagemErro.setVisibility(View.VISIBLE);
+        } else {
+            layoutConsumoSemanal.setVisibility(View.VISIBLE);
+            layoutConsumoMensal.setVisibility(View.VISIBLE);
+            layoutMensagemErro.setVisibility(View.GONE);
+        }
+        gerarPrevisao();
+    }
 
     private void updateIsCheck(boolean isChecked) {
         if (isChecked) {
@@ -323,12 +292,13 @@ public class HomeFragment extends Fragment implements GoogleApiClient.OnConnecti
         float previsaoConsumoMensal = 0;
         if (!checkFlex.isChecked()) {
             float precoPrincipal = getPrecoPrincipal();
-            float distancias = getDistanciaTotal();
             Log.d(Home, "Preço principal: " + precoPrincipal);
-            Log.d(Home, "Distancias: " + distancias);
 
             float consumoUrbano = getConsumoUrbano();
             Log.d(Home, "Consumo: " + consumoUrbano);
+
+            float distancias = getDistanciaTotal();
+            Log.d(Home, "Distancias: " + distancias);
 
             float valorPrevistoSemana = calculaPrevisaoSemanalNormal(precoPrincipal, distancias, consumoUrbano);
             Log.e("valorPrevisaoSemanal ", String.valueOf(valorPrevistoSemana));
