@@ -51,6 +51,7 @@ import com.minhagasosa.Transfer.Comments;
 import com.minhagasosa.Transfer.GasStation;
 import com.minhagasosa.activites.BaseActivity;
 import com.minhagasosa.adapters.CommentAdapter;
+import com.minhagasosa.utils.LocationUtils;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -150,6 +151,12 @@ public class GasStationActivity extends BaseActivity {
             }
         });
         final TextView tvPhone = (TextView) findViewById(R.id.tv_phone);
+        //Olha aqui como exemploe André.
+        boolean proximoAoPosto = LocationUtils.isNear(this, mGas.getLocation().getLat(), mGas.getLocation().getLng());
+        if(proximoAoPosto){
+            //Chama isso aqui pra adicionar os pontos quando clicar no botão habilitado. Vai dar eror pq ainda nao terminei o server....
+            //mGasService.addPoint(mGas.getId()).execute();
+        }
         tvPhone.setText(mGas.getPhoneNumer());
         tvPhone.setOnClickListener(new View.OnClickListener() {
             @Override

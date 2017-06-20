@@ -50,4 +50,8 @@ public interface GasStationService {
     @GET("gas/{id}")
     public Call<GasStation> getGasStation(
             @Path("id") String gasId);
+
+    @PUT("gas/ponts/{id}")
+    public Call<GasStation> addPoint(
+            @Path("id") String gasId);
 }
