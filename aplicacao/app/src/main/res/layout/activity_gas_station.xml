@@ -80,6 +80,14 @@
             fab:fab_label="@string/closed_gas_station"
             fab:fab_size="mini" />
 
+        <com.github.clans.fab.FloatingActionButton
+            android:id="@+id/fab_check_in_gas_station"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/quantum_ic_clear_white_24"
+            fab:fab_label="@string/checkIn_gas_station"
+            fab:fab_size="mini" />
+
     </com.github.clans.fab.FloatingActionMenu>
 
 </android.support.design.widget.CoordinatorLayout>

@@ -7,6 +7,7 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.location.Address;
 import android.location.Geocoder;
 import android.net.Uri;
@@ -68,8 +69,12 @@ import retrofit2.Response;
 public class GasStationActivity extends BaseActivity {
     private FloatingActionButton fabWrongLocal;
     private FloatingActionButton fabClosedGasStation;
+    private FloatingActionButton fabCheckInGasStation;
     private FloatingActionButton fabWrongPrices;
     private FloatingActionButton fabAddComment;
+    private int DisabledColor;
+    private int EnabledColor;
+    private int ClickColor;
     private FloatingActionMenu fabMenu;
     private GasStationService mGasService;
     private List<String> mComments;
@@ -88,6 +93,7 @@ public class GasStationActivity extends BaseActivity {
      * See https://g.co/AppIndexing/AndroidStudio for more information.
      */
     private GoogleApiClient client;
+    private boolean proximoAoPosto;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -152,11 +158,6 @@ public class GasStationActivity extends BaseActivity {
         });
         final TextView tvPhone = (TextView) findViewById(R.id.tv_phone);
         //Olha aqui como exemploe André.
-        boolean proximoAoPosto = LocationUtils.isNear(this, mGas.getLocation().getLat(), mGas.getLocation().getLng());
-        if(proximoAoPosto){
-            //Chama isso aqui pra adicionar os pontos quando clicar no botão habilitado. Vai dar eror pq ainda nao terminei o server....
-            //mGasService.addPoint(mGas.getId()).execute();
-        }
         tvPhone.setText(mGas.getPhoneNumer());
         tvPhone.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -367,15 +368,21 @@ public class GasStationActivity extends BaseActivity {
         });
         fabWrongLocal = (FloatingActionButton) findViewById(R.id.fab_wrong_local);
         fabClosedGasStation = (FloatingActionButton) findViewById(R.id.fab_closed_gas_station);
+        fabCheckInGasStation = (FloatingActionButton) findViewById(R.id.fab_check_in_gas_station);
         fabWrongPrices = (FloatingActionButton) findViewById(R.id.fab_wrong_prices);
         fabAddComment = (FloatingActionButton) findViewById(R.id.fab_add_comment);
+        DisabledColor = fabAddComment.getColorDisabled();
+        EnabledColor = fabAddComment.getColorNormal();
+        ClickColor = fabAddComment.getColorPressed();
 
         fabAddComment.setOnClickListener(clickListener);
+        fabCheckInGasStation.setOnClickListener(clickListener);
         fabWrongLocal.setOnClickListener(clickListener);
         fabClosedGasStation.setOnClickListener(clickListener);
         fabWrongPrices.setOnClickListener(clickListener);
 
         fabMenu = (FloatingActionMenu) findViewById(R.id.fab_menu);
+        checkLocation();
 
         mComments.add("A gasolina desse posto é ótima");
         mComments.add("Ótimo atendimento");
@@ -386,6 +393,23 @@ public class GasStationActivity extends BaseActivity {
 //        listViewComments.setAdapter(adapter);
 
         fabMenu.setClosedOnTouchOutside(true);
+    }
+
+    private void checkLocation() {
+        proximoAoPosto = LocationUtils.isNear(this, mGas.getLocation().getLat(), mGas.getLocation().getLng());
+        setEnableColors(proximoAoPosto);
+
+    }
+
+    private void setEnableColors(boolean enable) {
+        if(enable) {
+            fabCheckInGasStation.setColorNormal(EnabledColor);
+            fabCheckInGasStation.setColorPressed(ClickColor);
+        }else{
+            fabCheckInGasStation.setColorNormal(DisabledColor);
+            fabCheckInGasStation.setColorPressed(DisabledColor);
+
+        }
     }
 
 
@@ -539,6 +563,9 @@ public class GasStationActivity extends BaseActivity {
                 case R.id.fab_wrong_local:
                     reportLocation(v);
                     break;
+                case R.id.fab_check_in_gas_station:
+                    doChekIn(v);
+                    break;
                 case R.id.fab_closed_gas_station:
                     reportClosed(v);
                     break;
@@ -548,6 +575,17 @@ public class GasStationActivity extends BaseActivity {
             }
         }
     };
+
+    private void doChekIn(View v) {
+        checkLocation();
+        if(proximoAoPosto){
+            //TODO: DO REQUEST
+            //
+        }else {
+            Snackbar.make(v, "Você precisa estar próximo ao posto para realizar o CheckIn e ganhar pontos!", Snackbar.LENGTH_LONG).setAction("Action", null).show();
+        }
+
+    }
 
     private void reportWrongPrice(final View v) {
         mGasService.reportWrongPrice(mGas.getId()).enqueue(new Callback<ResponseBody>() {
