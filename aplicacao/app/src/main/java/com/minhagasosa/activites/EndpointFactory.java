@@ -45,7 +45,7 @@ public class EndpointFactory {
         OkHttpClient client = httpClient.build();
         return new Retrofit.Builder()
                 .baseUrl("https://minha-gasosa-p1.herokuapp.com/api/")
-//                .baseUrl("http://192.168.25.3:5000/api/")
+//                .baseUrl("http://192.168.25.5:5000/api/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .client(client)
                 .build();

@@ -398,7 +398,6 @@ public class GasStationActivity extends BaseActivity {
     private void checkLocation() {
         proximoAoPosto = LocationUtils.isNear(this, mGas.getLocation().getLat(), mGas.getLocation().getLng());
         setEnableColors(proximoAoPosto);
-
     }
 
     private void setEnableColors(boolean enable) {
@@ -576,11 +575,31 @@ public class GasStationActivity extends BaseActivity {
         }
     };
 
-    private void doChekIn(View v) {
+    private void doChekIn(final View v) {
         checkLocation();
         if(proximoAoPosto){
-            //TODO: DO REQUEST
-            //
+            mGasService.addPoint(mGas.getId()).enqueue(new Callback<ResponseBody>() {
+                @Override
+                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                    if(v != null){
+                        if(response.code() == 201){
+                            Snackbar.make(v, "Você ganhou um ponto!", Snackbar.LENGTH_LONG).setAction("Action", null).show();
+                        }else if(response.code() == 501){
+                            Snackbar.make(v, "Você pontouou a pouco tempo. Tente mais tarde!", Snackbar.LENGTH_LONG).setAction("Action", null).show();
+                        }else{
+                            Snackbar.make(v, "Não foi possível pontuar. Tente novamente mais tarde!" + response.code(), Snackbar.LENGTH_LONG).setAction("Action", null).show();
+                        }
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<ResponseBody> call, Throwable t) {
+                    t.printStackTrace();
+                    if(v != null){
+                        Snackbar.make(v, "Não foi possível pontuar. Tente novamente mais tarde!", Snackbar.LENGTH_LONG).setAction("Action", null).show();
+                    }
+                }
+            });
         }else {
             Snackbar.make(v, "Você precisa estar próximo ao posto para realizar o CheckIn e ganhar pontos!", Snackbar.LENGTH_LONG).setAction("Action", null).show();
         }

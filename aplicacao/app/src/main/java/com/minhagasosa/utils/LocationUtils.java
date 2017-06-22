@@ -27,7 +27,7 @@ public class LocationUtils {
             double latitude = location.getLatitude();
             Location.distanceBetween(targetLat, targetLng, latitude, longitude, results);
             float distanceInMeters = results[0];
-            return distanceInMeters < 200;
+            return distanceInMeters < 1000;
         }catch (Exception e){
             return false;
         }

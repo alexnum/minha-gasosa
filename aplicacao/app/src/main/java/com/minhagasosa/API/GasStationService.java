@@ -51,7 +51,7 @@ public interface GasStationService {
     public Call<GasStation> getGasStation(
             @Path("id") String gasId);
 
-    @PUT("gas/ponts/{id}")
-    public Call<GasStation> addPoint(
+    @PUT("gas/point/{id}")
+    public Call<ResponseBody> addPoint(
             @Path("id") String gasId);
 }
