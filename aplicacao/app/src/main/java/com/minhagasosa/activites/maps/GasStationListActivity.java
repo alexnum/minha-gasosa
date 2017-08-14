@@ -92,20 +92,20 @@ public class GasStationListActivity extends BaseActivity {
                         String gasPlusText = "";
                         try { // SET GAS
                             Float gasPrice = new Float(gasStation.get(position).getGasPrice());
-                            gasText = "Gas price: " + Float.toString(gasPrice) + " R$. \n";
+                            gasText = getResources().getString(R.string.preco_gasolina) + " R$ " + Float.toString(gasPrice) + "\n";
                         } catch (Exception e) {
                         }
 
                         try { // SET GAS PLUS
                             Float gasPlusPrice = new Float(gasStation.get(position).getGasPlusPrice());
-                            gasPlusText = "Gas Plus price: " + Float.toString(gasPlusPrice) + " R$.";
+                            gasPlusText = getResources().getString(R.string.preco_gasolina_aditivada)+ " R$ " + Float.toString(gasPlusPrice) + " .";
 
                         } catch (Exception e) {
                         }
 
                         try { // SET ALCOOL
                             Float alcoolPrice = new Float(gasStation.get(position).getAlcoolPrice());
-                            alcoholText = "Alcohol price: " + Float.toString(alcoolPrice) + " R$. \n";
+                            alcoholText =  getResources().getString(R.string.preco_alcool) +" R$ " + Float.toString(alcoolPrice) + ".\n";
 
                         } catch (Exception e) {
                         }

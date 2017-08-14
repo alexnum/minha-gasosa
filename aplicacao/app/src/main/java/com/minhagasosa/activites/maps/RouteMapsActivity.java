@@ -590,7 +590,7 @@ public class RouteMapsActivity extends FragmentActivity
 
 
             if(result.size()<1){
-                Toast.makeText(getBaseContext(), "No Points", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getBaseContext(), "Sem pontos", Toast.LENGTH_SHORT).show();
                 return;
             }
 

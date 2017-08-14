@@ -102,18 +102,18 @@
     <string name="dica30">Antes de abastecer, veja qual posto tem a gasolina mais barata do seu bairro. Na sessão combustíveis do site você encontra o preço de todos os postos de todas as capitais brasileiras e ainda pode ler e deixar comentários sobre seus postos favoritos ou mais suspeitos.</string>
     <string name="marcaDoCarro">marcaDoCarro</string>
     <string name="modeloDoCarro">modelo</string>
-    <string name="versaoDoCarro">versao</string>
+    <string name="versaoDoCarro">versão</string>
     <string name="rating">Nota</string>
     <string name="postos_de_gasolina">Postos de gasolina</string>
     <string name="gas_price">Preço da Gasolina</string>
-    <string name="alcool_price">Preço do Alcool</string>
-    <string name="gas_plus_price">Preço da Gas. Aditivada</string>
+    <string name="alcool_price">Preço do Álcool</string>
+    <string name="gas_plus_price">Preço da Gás. Aditivada</string>
     <string name="oil">Troca de Óleo</string>
     <string name="restaurant">Restaurante</string>
-    <string name="sleep">Dormido</string>
+    <string name="sleep">Dormida</string>
     <string name="tire">Calibragem de Pneus</string>
     <string name="atm">Caixa Eletrônico</string>
-    <string name="glass">Limpeza de Parabrizas</string>
+    <string name="glass">Limpeza de Parabrisas</string>
     <string name="depStore">Loja de Conveniência</string>
 
     <string name="title_activity_gas_station">Posto de Combustível</string>
@@ -211,9 +211,9 @@
     <string name="action_settings">Settings</string>
     <string name="gasolina_comum">Gasolina Comum</string>
     <string name="gasolina_aditivada">Gasolina Aditivada</string>
-    <string name="alcool">Alcool</string>
+    <string name="alcool">Álcool</string>
     <string name="closed_gas_station">Este Posto Fechou</string>
-    <string name="checkIn_gas_station">Realizar CheckIn Neste Posto</string>
+    <string name="checkIn_gas_station">Realizar Check-in Neste Posto</string>
     <string name="wrong_localization">Reportar Localização Incorreta</string>
     <string name="wrong_prices">Reportar Preços Incorretos</string>
     <string name="add_comment">Adicionar comentário</string>
@@ -231,8 +231,8 @@
     <string name="credito">Crédito</string>
     <string name="precos">Preços</string>
     <string name="avaliacao_dos_usuarios">Avaliação Dos Usuários:</string>
-    <string name="nenhum_comentario_cadastrado">Nenhum comentario cadastrado.</string>
-    <string name="title_activity_settings">Settings</string>
+    <string name="nenhum_comentario_cadastrado">Nenhum comentário cadastrado.</string>
+    <string name="title_activity_settings">Configuração</string>
 
     <!-- Strings related to Settings -->
 
@@ -310,4 +310,7 @@
     <string name="configuracoes">Settings</string>
     <string name="receive_notification">Receive Notifications></string>
     <string name="sem_consumo_do_carro">Para visualizar os valores de consumo semanal e mensal é necessario registrar ao menos dois \'tanques cheio\' na sessão abastecimento!</string>
+    <string name="preco_gasolina">Preço da Gasolina: </string>
+    <string name="preco_gasolina_aditivada">Preço da Gasolina Aditivada: </string>
+    <string name="preco_alcool">Preço do Álcool : </string>
 </resources>

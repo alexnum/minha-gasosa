@@ -273,7 +273,7 @@ public class RefuelFragment extends Fragment implements  DatePickerDialog.OnDate
     @OnItemSelected(R.id.spinnerRefuel)
     public void itemSelected (Spinner spn, int position) {
         loadData(data.get(position));
-        Toast.makeText(getContext(), "You selected: " + data.get(position).toString(), Toast.LENGTH_LONG).show();
+        Toast.makeText(getContext(), "Você selecionou: " + data.get(position).toString(), Toast.LENGTH_LONG).show();
     }
 
     @OnItemSelected(value = R.id.spinnerRefuel,
