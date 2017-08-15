@@ -182,7 +182,7 @@ public class ChartView {
                 Log.i("VAL SELECTED",
                         "Value: " + e.getY() + ", index: " + h.getX()
                                 + ", DataSet index: " + h.getDataSetIndex());
-                Toast.makeText(mContext, xData[h.getDataSetIndex()] + " = " + e.getY() + "KM", Toast.LENGTH_SHORT).show();
+                Toast.makeText(mContext, xData[(int) h.getX()] + " = " + e.getY() + "KM", Toast.LENGTH_SHORT).show();
             }
 
             @Override
